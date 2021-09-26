@@ -1,0 +1,21 @@
+module.exports = {
+  type: 'mysql',
+  host: process.env.MYSQL_HOST,
+  port: process.env.MYSQL_PORT || 3306,
+  username: process.env.MYSQL_USERNAME,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
+  synchronize: false,
+  logger: 'advanced-console',
+  logging: process.env.NODE_ENV === 'production' ? ['error', 'warn'] : 'all',
+  cache: true,
+  dropSchema: false,
+  migrationsTableName: 'migration_table',
+  entities: ['dist/**/*.entity.js'],
+  maxQueryExecutionTime: 1000,
+  migrationsRun: false,
+  cli: {
+    migrationsDir: 'src/migration',
+    entitiesDir: 'src/entity',
+  },
+};
