@@ -1,11 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
+import UserService from '../servies/user.service';
 
-@Controller({
-  path: 'user',
-})
+@Controller('users')
 export default class UserController {
+  constructor(private userSvc: UserService) {}
+
   @Get()
   getUsers() {
-    return [];
+    return this.userSvc.getUsers();
   }
 }
