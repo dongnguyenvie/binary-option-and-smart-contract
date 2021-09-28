@@ -17,8 +17,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         const secret = config.get('JWT_SECRET');
         const expiresIn = config.get('JWT_EXPIRES_IN') || 86400;
 
-        console.log({ expiresIn });
-
         return {
           secret: secret,
           signOptions: { expiresIn: +expiresIn },
@@ -32,4 +30,4 @@ import { JwtStrategy } from './strategies/jwt.strategy';
   controllers: [AuthController],
   exports: [],
 })
-export class AuthModule {}
+export default class AuthModule {}

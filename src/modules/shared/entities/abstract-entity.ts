@@ -1,11 +1,6 @@
 import { Exclude } from 'class-transformer';
-import {
-  Column,
-  CreateDateColumn,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { Status } from '../enums/common';
+import { Column, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Status } from '../constants/common.contant';
 
 export abstract class AbstractEntity {
   @PrimaryGeneratedColumn('uuid')

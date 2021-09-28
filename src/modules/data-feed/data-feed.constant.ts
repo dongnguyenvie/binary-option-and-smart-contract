@@ -1,0 +1,1 @@
+export const BINANCE_PROVIDER = 'BINANCE_PROVIDER';

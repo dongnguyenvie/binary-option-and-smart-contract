@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AuthModule } from './modules/auth/auth.module';
+import AppController from './app.controller';
+import AuthModule from './modules/auth/auth.module';
+import DataFeedModule from './modules/data-feed/data-feed.module';
 import UserModule from './modules/user/user.module';
+import WalletModule from './modules/wallet/wallet.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import UserModule from './modules/user/user.module';
     }),
     UserModule,
     AuthModule,
+    WalletModule,
+    DataFeedModule,
   ],
   controllers: [AppController],
   providers: [],

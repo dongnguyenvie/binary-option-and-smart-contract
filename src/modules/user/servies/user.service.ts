@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Status } from 'src/modules/shared/enums/common';
+import { Status } from 'src/modules/shared/constants/common.contant';
 import { CreateUser } from '../interface';
 import UserRepository from '../repositories/user.repository';
 

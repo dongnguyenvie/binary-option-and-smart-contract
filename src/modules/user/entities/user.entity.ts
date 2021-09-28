@@ -1,5 +1,7 @@
 import { AbstractEntity } from 'src/modules/shared/entities/abstract-entity';
-import { Entity, Column } from 'typeorm';
+import TransactionEntity from 'src/modules/wallet/entities/transactions.entity';
+import WalletEntity from 'src/modules/wallet/entities/wallets.entity';
+import { Entity, Column, OneToMany, OneToOne } from 'typeorm';
 
 @Entity({ name: 'user' })
 export class UserEntity extends AbstractEntity {
@@ -32,6 +34,15 @@ export class UserEntity extends AbstractEntity {
 
   @Column('text', { nullable: true })
   profile: string;
+
+  @OneToMany(() => TransactionEntity, (transaction) => transaction.user, {
+    lazy: true,
+    createForeignKeyConstraints: false,
+  })
+  transactions: TransactionEntity[];
+
+  @OneToOne(() => WalletEntity, (wallet) => wallet.user, { lazy: true, createForeignKeyConstraints: false })
+  wallet: WalletEntity;
 
   constructor(partial: Partial<UserEntity>) {
     super();
