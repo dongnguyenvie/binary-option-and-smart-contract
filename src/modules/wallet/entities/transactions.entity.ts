@@ -5,6 +5,18 @@ import WalletEntity from './wallets.entity';
 
 @Entity({ name: 'transactions' })
 export default class TransactionEntity extends AbstractEntity {
+  @Column('int', { name: 'type' })
+  type: number;
+
+  @Column('decimal', { name: 'credit', default: 0 })
+  credit: number;
+
+  @Column('decimal', { name: 'debit', default: 0 })
+  debit: number;
+
+  @Column('text', { name: 'description', nullable: true })
+  description: string;
+
   /** User relationship */
   @ManyToOne(() => UserEntity, (user) => user.transactions, {
     lazy: true,
@@ -28,18 +40,6 @@ export default class TransactionEntity extends AbstractEntity {
   @Column({ name: 'wallet_id' })
   walletId: string;
   /** Wallet relationship */
-
-  @Column('int', { name: 'type' })
-  type: number;
-
-  @Column('text', { name: 'description', nullable: true })
-  description: string;
-
-  @Column('decimal', { name: 'credit', default: 0 })
-  credit: number;
-
-  @Column('decimal', { name: 'debit', default: 0 })
-  debit: number;
 
   @ManyToOne(() => UserEntity, {
     lazy: true,
