@@ -1,5 +1,5 @@
 import { AbstractEntity } from 'src/modules/shared/entities/abstract-entity';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
+import UserEntity from 'src/modules/user/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import WalletEntity from './wallets.entity';
 

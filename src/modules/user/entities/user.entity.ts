@@ -4,7 +4,7 @@ import WalletEntity from 'src/modules/wallet/entities/wallets.entity';
 import { Entity, Column, OneToMany, OneToOne } from 'typeorm';
 
 @Entity({ name: 'user' })
-export class UserEntity extends AbstractEntity {
+export default class UserEntity extends AbstractEntity {
   @Column('varchar', { nullable: true, unique: true })
   username: string;
 

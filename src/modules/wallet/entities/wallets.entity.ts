@@ -1,7 +1,7 @@
 import { WalletStatus } from 'src/modules/shared/constants/common.contant';
 import { AbstractEntity } from 'src/modules/shared/entities/abstract-entity';
-import { UserEntity } from 'src/modules/user/entities/user.entity';
-import { Entity, Column, OneToOne, JoinColumn, RelationId, OneToMany, Unique, Index } from 'typeorm';
+import UserEntity from 'src/modules/user/entities/user.entity';
+import { Entity, Column, OneToOne, JoinColumn, RelationId, OneToMany } from 'typeorm';
 import TransactionEntity from './transactions.entity';
 
 @Entity({ name: 'wallets' })
@@ -37,7 +37,10 @@ export default class WalletEntity extends AbstractEntity {
   userId: string;
   /** User relationship */
 
-  @OneToMany(() => TransactionEntity, (transaction) => transaction.wallet, { lazy: true })
+  @OneToMany(() => TransactionEntity, (transaction) => transaction.wallet, {
+    lazy: true,
+    createForeignKeyConstraints: false,
+  })
   transactions: TransactionEntity[];
 
   @RelationId((wallet: WalletEntity) => wallet.transactions)
