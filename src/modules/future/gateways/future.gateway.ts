@@ -3,20 +3,14 @@ import { NestGateway } from '@nestjs/websockets/interfaces/nest-gateway.interfac
 import { map } from 'rxjs';
 import { Socket, Server } from 'socket.io';
 import DataFeedService from 'src/modules/data-feed/services/data-feed.service';
-import { Cache } from 'cache-manager';
-import { CACHE_MANAGER, Inject } from '@nestjs/common';
 
 @WebSocketGateway({ namespace: '/future' })
-export class FutureGateway implements NestGateway {
-  constructor(
-    private readonly datafeedSvc: DataFeedService,
-    @Inject(CACHE_MANAGER) private readonly cache: Cache,
-  ) {}
+export default class FutureGateway implements NestGateway {
+  constructor(private readonly datafeedSvc: DataFeedService) {}
 
   @WebSocketServer() server: Server;
 
   public afterInit(server: Server): void {
-    this.cache.set('dong', 'test');
     this.datafeedSvc
       .fromStream()
       .pipe(
@@ -30,7 +24,7 @@ export class FutureGateway implements NestGateway {
   }
 
   @SubscribeMessage('authorization') //symbolSub
-  public authorization(client: Socket, apiKey: string): void {
+  public authorization(client: Socket, token: string): void {
     // if (!apiKey || !this.apiKeys[apiKey]) {
     //   client.emit('unauthenticated', {
     //     message: 'authencation unsuccessfully',
