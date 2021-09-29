@@ -62,5 +62,7 @@ export default class TransactionService {
   }
 
   @OnEvent(transactionEvent.CREATE_BET_TRANSACTION)
-  handleCreateBetTransactionEvent(payload: any) {}
+  handleCreateBetTransactionEvent(payload: any) {
+    console.log('payload create order', payload);
+  }
 }

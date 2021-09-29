@@ -1,6 +1,7 @@
+import OrderEntity from 'src/modules/orders/entities/order.entity';
 import { AbstractEntity } from 'src/modules/shared/entities/abstract-entity';
 import UserEntity from 'src/modules/user/entities/user.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import WalletEntity from './wallets.entity';
 
 @Entity({ name: 'transactions' })
@@ -48,4 +49,11 @@ export default class TransactionEntity extends AbstractEntity {
   })
   @JoinColumn({ name: 'create_by' })
   createBy: UserEntity;
+
+  @OneToOne(() => OrderEntity, { lazy: true, createForeignKeyConstraints: false, nullable: true })
+  @JoinColumn({ name: 'order_id' })
+  order: OrderEntity;
+
+  @Column({ name: 'order_id' })
+  orderId: string;
 }
