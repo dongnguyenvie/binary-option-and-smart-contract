@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import AppController from './app.controller';
 import AuthModule from './modules/auth/auth.module';
 import DataFeedModule from './modules/data-feed/data-feed.module';
+import FutureModule from './modules/future/future.module';
 import UserModule from './modules/user/user.module';
 import WalletModule from './modules/wallet/wallet.module';
 
@@ -37,6 +38,7 @@ import WalletModule from './modules/wallet/wallet.module';
     AuthModule,
     WalletModule,
     DataFeedModule,
+    FutureModule,
   ],
   controllers: [AppController],
   providers: [],

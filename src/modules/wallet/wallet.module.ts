@@ -10,6 +10,6 @@ import WalletService from './servies/wallet.service';
   imports: [TypeOrmModule.forFeature([WalletRepository, TransactionRepository])],
   providers: [TransactionService, WalletService],
   controllers: [WalletController],
-  exports: [],
+  exports: [TransactionService, WalletService],
 })
 export default class WalletModule {}

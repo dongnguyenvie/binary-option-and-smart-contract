@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BINANCE_PROVIDER } from '../data-feed.constant';
+import { BINANCE_PROVIDER, CANDLE_INTERVAL, NUMBER_OF_CANDLE, SYMBOL_PAIR } from '../data-feed.constant';
 import Binance from 'node-binance-api';
 import { map, Observable, tap } from 'rxjs';
 import { SteamChart } from '../interfaces';
@@ -19,15 +19,15 @@ export default class DataFeedService {
     if (!this.steamChart1M) {
       this.steamChart1M = new Observable((subscriber) => {
         this.binance.websockets.chart(
-          'BTCUSDT',
-          '1m',
+          SYMBOL_PAIR,
+          CANDLE_INTERVAL,
           (symbol, interval, chart) => {
             const tick = this.binance.last(chart);
             const last = chart[tick];
             const data = { chart, last } as T;
             subscriber.next(data);
           },
-          2,
+          NUMBER_OF_CANDLE,
         );
       }).pipe(
         map(({ chart, last }) => {
