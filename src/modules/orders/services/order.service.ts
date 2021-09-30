@@ -22,8 +22,8 @@ export default class OrderService {
 
   async createOrder(payload: CreateOrder) {
     const orderTime = dayjs().startOf('minute').unix();
-    const isAllow = (orderTime / 60) % 2 === 0;
-    if (!isAllow) {
+    const canOrder = isCanOrder(orderTime);
+    if (!canOrder) {
       return new BadRequestException('Cannot order');
     }
 
@@ -52,4 +52,8 @@ export default class OrderService {
       id: result.id,
     };
   }
+}
+
+function isCanOrder(time: number) {
+  return (time / 60) % 2 === 0;
 }

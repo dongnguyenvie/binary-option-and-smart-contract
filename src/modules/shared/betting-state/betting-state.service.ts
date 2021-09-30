@@ -35,7 +35,6 @@ export class BettingStateService {
       const values = await this.cache.store.mget(keys);
       return values;
     } catch (error) {
-      console.log('redis get all has error', error);
       return [];
     }
   }
