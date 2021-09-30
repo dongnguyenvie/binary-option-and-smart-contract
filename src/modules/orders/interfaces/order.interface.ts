@@ -1,5 +1,4 @@
-import { BetType } from 'src/modules/shared/constants/common.contant';
-import { OrderStatus } from '../consttants/order.contstant';
+import { BetType, OrderStatus } from 'src/modules/shared/constants/common.contant';
 
 export interface CreateOrderTransaction {
   id: string;
@@ -9,11 +8,10 @@ export interface CreateOrderTransaction {
   amount: number;
   asset: string;
 }
+
 export interface CreateOrder {
   userId: string;
-  status: OrderStatus;
   betType: BetType;
   amount: number;
   asset: string;
-  duration: number;
 }

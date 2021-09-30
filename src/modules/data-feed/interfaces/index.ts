@@ -1,13 +1,10 @@
-export interface SteamChart {
-  chart: Chart;
-  last: LastCandle;
-}
+export type SteamChart = [string, Candle | LastCandle][];
 
 interface Chart {
   [name: string]: Candle;
 }
 
-interface LastCandle {
+export interface LastCandle {
   open: string;
   high: string;
   low: string;
@@ -15,6 +12,7 @@ interface LastCandle {
   volume: string;
   isFinal: boolean;
   result: number;
+  time?: string;
 }
 
 interface Candle {

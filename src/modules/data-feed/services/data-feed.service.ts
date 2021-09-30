@@ -24,19 +24,15 @@ export default class DataFeedService {
           (symbol, interval, chart) => {
             const tick = this.binance.last(chart);
             const last = chart[tick];
-            const data = { chart, last } as T;
-            subscriber.next(data);
+            last.isFinal = last.isFinal === undefined;
+            last.result =
+              last.open > last.close ? BetType.SELL : last.open < last.close ? BetType.BUY : BetType.NONE;
+            const candles = Object.entries(chart || {}) as unknown as T;
+            subscriber.next(candles);
           },
           NUMBER_OF_CANDLE,
         );
-      }).pipe(
-        map(({ chart, last }) => {
-          last.isFinal = last.isFinal === undefined;
-          last.result =
-            last.open > last.close ? BetType.SELL : last.open < last.close ? BetType.BUY : BetType.NONE;
-          return { chart, last } as T;
-        }),
-      );
+      });
     }
     return this.steamChart1M as Observable<T>;
   }

@@ -12,18 +12,18 @@ export default class OrderStatusDto {
   @IsNumber()
   betType: number;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  duration: number;
+  // @ApiProperty()
+  // @IsNotEmpty()
+  // @IsNumber()
+  // duration: number;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
   asset: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsNumber()
-  status: number;
+  // @ApiProperty()
+  // @IsNotEmpty()
+  // @IsNumber()
+  // status: number;
 }

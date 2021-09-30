@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from 'eventemitter2';
 import { BettingStateService } from 'src/modules/shared/betting-state/betting-state.service';
-import { WalletStatus } from 'src/modules/shared/constants/common.contant';
+import { BetType, OrderStatus, WalletStatus } from 'src/modules/shared/constants/common.contant';
 import { transactionEvent } from 'src/modules/shared/constants/event.constant';
 import dayjs from 'src/modules/shared/helpers/dayjs';
-import { CurrentUser } from 'src/modules/shared/interfaces/common.interface';
+import { ORDER_DURATION } from '../constants/order.constant';
 import { CreateOrder, CreateOrderTransaction } from '../interfaces/order.interface';
 import OrderRepository from '../repositories/order.repository';
 
@@ -20,22 +20,33 @@ export default class OrderService {
     this.eventEmitter.emit(transactionEvent.CREATE_BET_TRANSACTION, order);
   }
 
-  async createOrder(order: CreateOrder) {
+  async createOrder(payload: CreateOrder) {
     const orderTime = dayjs().startOf('minute').unix();
     const isAllow = (orderTime / 60) % 2 === 0;
     if (!isAllow) {
       return new BadRequestException('Cannot order');
     }
+
     const openTime = orderTime + 60;
-    const newOrder = this.orderRepo.create(order);
-    const result = await this.orderRepo.save({ ...newOrder, openTime });
-    console.log('result', result);
+    const { amount, betType, asset, userId } = payload;
+    const newOrder = this.orderRepo.create({
+      amount,
+      betType,
+      openTime,
+      status: OrderStatus.WAITING,
+      duration: ORDER_DURATION,
+      userId: userId,
+      asset: asset,
+    });
+    const result = await this.orderRepo.save({ ...newOrder });
+
     this.bettingStateSvc.set(result.id, {
       betType: result.betType,
       amount: result.amount,
       openTime: result.openTime,
       userId: result.userId,
     });
+
     return {
       id: result.id,
     };

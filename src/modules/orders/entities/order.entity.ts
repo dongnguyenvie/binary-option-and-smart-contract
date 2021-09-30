@@ -1,8 +1,8 @@
+import { OrderStatus } from 'src/modules/shared/constants/common.contant';
 import { AbstractEntity } from 'src/modules/shared/entities/abstract-entity';
 import UserEntity from 'src/modules/user/entities/user.entity';
 import TransactionEntity from 'src/modules/wallet/entities/transactions.entity';
 import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
-import { OrderStatus } from '../consttants/order.contstant';
 
 @Entity({ name: 'orders' })
 export default class OrderEntity extends AbstractEntity {

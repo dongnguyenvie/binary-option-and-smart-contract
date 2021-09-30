@@ -21,3 +21,9 @@ export enum TransactionType {
   DEPOSIT = 1,
   WITHDRAW = 2,
 }
+
+export enum OrderStatus {
+  OPEN = 1,
+  WAITING = 2,
+  FINiSH = 3,
+}

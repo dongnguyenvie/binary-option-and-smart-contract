@@ -11,16 +11,9 @@ export default class FutureGateway implements NestGateway {
   @WebSocketServer() server: Server;
 
   public afterInit(server: Server): void {
-    this.datafeedSvc
-      .fromStream()
-      .pipe(
-        map((data) => {
-          return Object.entries(data.chart || {});
-        }),
-      )
-      .subscribe((dataStreamming) => {
-        server.emit('datafeed', dataStreamming);
-      });
+    this.datafeedSvc.fromStream().subscribe((candles) => {
+      server.emit('datafeed', candles);
+    });
   }
 
   @SubscribeMessage('authorization') //symbolSub
