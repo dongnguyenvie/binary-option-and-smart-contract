@@ -5,7 +5,7 @@ import { map } from 'rxjs';
 import { Socket, Server } from 'socket.io';
 import DataFeedService from 'src/modules/data-feed/services/data-feed.service';
 
-@WebSocketGateway({ namespace: '/data-future' })
+@WebSocketGateway({ namespace: '/data-future', cors: true })
 export default class DataFutureGateway implements NestGateway {
   constructor(private readonly datafeedSvc: DataFeedService, private jwtService: JwtService) {}
 

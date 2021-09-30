@@ -6,7 +6,7 @@ import { Socket, Server } from 'socket.io';
 import { futureEvent } from 'src/modules/shared/constants/event.constant';
 import BettingEvent from 'src/modules/shared/events/betting.event';
 
-@WebSocketGateway({ namespace: '/future' })
+@WebSocketGateway({ namespace: '/future', cors: true })
 export default class FutureGateway implements NestGateway {
   constructor(private jwtService: JwtService) {}
 
