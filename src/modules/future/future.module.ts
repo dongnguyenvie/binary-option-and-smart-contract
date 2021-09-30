@@ -6,7 +6,7 @@ import SharedModule from '../shared/shared-module';
 import { BullModule } from '@nestjs/bull';
 import { BET_CALCULATOR } from './constants/future.constant';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { BetProcessor } from './processors/bet.processor';
+import BetProcessor from './processors/bet.processor';
 import DataFutureGateway from './gateways/data-future.gateway';
 
 @Module({

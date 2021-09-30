@@ -3,7 +3,7 @@ import { Job } from 'bull';
 import { BET_CALCULATOR, CALCULATE_BET } from '../constants/future.constant';
 
 @Processor(BET_CALCULATOR)
-export class BetProcessor {
+export default class BetProcessor {
   constructor() {}
 
   @OnQueueActive()

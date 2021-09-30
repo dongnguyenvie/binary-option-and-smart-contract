@@ -16,14 +16,14 @@ export default class FutureGateway implements NestGateway {
 
   @SubscribeMessage('authorization')
   public authorization(client: Socket, token: string): void {
-    console.log('client.handshake', client.handshake);
     const isAuth = this.jwtService.verify(token);
     if (!isAuth) {
       client.disconnect();
       return;
     }
-    client.handshake.auth.isVerify = true;
     const user = this.jwtService.decode(token) as any;
+    client.handshake.auth.isVerify = true;
+    client.handshake.auth.user = user;
     client.join(user.id);
     process.nextTick(async () => {
       client.emit('verification', user);
