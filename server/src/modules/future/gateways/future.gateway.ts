@@ -43,7 +43,7 @@ export default class FutureGateway implements NestGateway {
   }
 
   @OnEvent(futureEvent.BET_RESULT)
-  streamingDataReceiver(payload: BetResultEvent) {
+  handleEmitBetResultEvent(payload: BetResultEvent) {
     this.handleEmitBetResult(payload);
   }
 }
