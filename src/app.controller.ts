@@ -1,9 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Ip } from '@nestjs/common';
 
 @Controller()
 export default class AppController {
   @Get('ping')
-  ping(): string {
-    return 'pong';
+  ping(@Ip() ip: string): string {
+    return `pong ${ip}`;
   }
 }

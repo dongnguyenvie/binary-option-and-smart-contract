@@ -6,7 +6,7 @@ import AppController from './app.controller';
 import AuthModule from './modules/auth/auth.module';
 import DataFeedModule from './modules/data-feed/data-feed.module';
 import FutureModule from './modules/future/future.module';
-import { OrdersModule } from './modules/orders/orders.module';
+import OrdersModule from './modules/orders/orders.module';
 import UserModule from './modules/user/user.module';
 import WalletModule from './modules/wallet/wallet.module';
 

@@ -11,4 +11,4 @@ import OrderService from './services/order.service';
   controllers: [OrderController],
   exports: [],
 })
-export class OrdersModule {}
+export default class OrdersModule {}
