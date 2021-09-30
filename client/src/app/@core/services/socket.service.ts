@@ -86,7 +86,7 @@ export class SocketService {
 
   private addChartingListeners() {
     if (this._socket) {
-      this._socket.on('tick', (obj) => {
+      this._socket.on('datafeed', (obj) => {
         this._chartSubject.next(obj);
       });
     }
@@ -96,7 +96,7 @@ export class SocketService {
     // console.log(this._socket);
     if (this._socket) {
       console.log(eventName);
-      if (eventName === 'tick') {
+      if (eventName === 'datafeed') {
         this.isSubscriber = args;
       }
       this._socket.emit(eventName, ...args);

@@ -9,6 +9,7 @@ import { createChart, CrosshairMode, ISeriesApi } from 'lightweight-charts';
 import { SocketService } from '../@core/services/socket.service';
 import chartCandle from './data-feed';
 import { Candle, DateChart } from './interface';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-chart',
@@ -45,6 +46,7 @@ export class ChartComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {}
   ngAfterViewInit() {
+    let isScale = false;
     const chart = createChart(this.chart.nativeElement, {
       width: 600,
       height: 300,
@@ -52,12 +54,28 @@ export class ChartComponent implements OnInit, AfterViewInit {
         mode: CrosshairMode.Normal,
       },
     });
-    console.log(this.dataFeed);
     this.candleSeries = chart.addCandlestickSeries();
-    this.candleSeries.setData(this.dataFeed);
-    setInterval(() => {
-      this.updateChart();
-    }, 1000);
+    // this.candleSeries.setData(this.dataFeed);
+    // setInterval(() => {
+    //   this.updateChart();
+    // }, 1000);
+    this.socketService.chart
+      .pipe(
+        map((candles: any) => {
+          return candles.map((candle: any) => {
+            const [time, tick] = candle;
+            tick.time = time / 1000;
+            return tick;
+          });
+        })
+      )
+      .subscribe((data) => {
+        this.candleSeries.setData(data);
+        if (!isScale) {
+          chart.timeScale().fitContent();
+          isScale = true;
+        }
+      });
   }
 
   mergeTickToBar(price: number) {

@@ -19,7 +19,7 @@
     "@angular/platform-browser-dynamic": "~12.1.0-",
     "@angular/router": "~12.1.0-",
     "lightweight-charts": "^3.6.1",
-    "rxjs": "~6.6.0",
+    "rxjs": "^7.3.0",
     "socket.io-client": "^4.2.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
