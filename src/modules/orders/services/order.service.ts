@@ -29,6 +29,7 @@ export default class OrderService {
 
     const openTime = orderTime + 60;
     const { amount, betType, asset, userId } = payload;
+
     const newOrder = this.orderRepo.create({
       amount,
       betType,
@@ -38,7 +39,7 @@ export default class OrderService {
       userId: userId,
       asset: asset,
     });
-    const result = await this.orderRepo.save({ ...newOrder });
+    const result = await this.orderRepo.save(newOrder);
 
     this.bettingStateSvc.set(result.id, {
       betType: result.betType,
