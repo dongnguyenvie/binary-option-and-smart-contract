@@ -6,7 +6,7 @@ import { Socket, Server } from 'socket.io';
 import DataFeedService from 'src/modules/data-feed/services/data-feed.service';
 
 @WebSocketGateway({ namespace: '/data-future' })
-export default class FutureGateway implements NestGateway {
+export default class DataFutureGateway implements NestGateway {
   constructor(private readonly datafeedSvc: DataFeedService, private jwtService: JwtService) {}
 
   @WebSocketServer() server: Server;
