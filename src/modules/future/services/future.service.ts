@@ -20,9 +20,8 @@ export default class FutureService implements OnModuleInit {
       )
       .subscribe((candle) => {
         if (candle.isFinal) {
-          const nextCandleTime = dayjs().startOf('minute').unix() * 1000;
           const canCaculate = isCanCaculateBetting(+candle.time);
-          if (nextCandleTime > +candle.time && canCaculate) {
+          if (canCaculate) {
             this.caculateBetting(candle);
           }
         }
@@ -40,5 +39,7 @@ export default class FutureService implements OnModuleInit {
 }
 
 function isCanCaculateBetting(time: number) {
-  return (time / 1000 / 60) % 2 === 1;
+  const nextCandleTime = dayjs().startOf('minute').unix() * 1000;
+
+  return nextCandleTime > time && (time / 1000 / 60) % 2 === 1;
 }
