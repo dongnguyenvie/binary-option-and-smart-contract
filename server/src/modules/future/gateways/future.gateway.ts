@@ -4,7 +4,7 @@ import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/web
 import { NestGateway } from '@nestjs/websockets/interfaces/nest-gateway.interface';
 import { Socket, Server } from 'socket.io';
 import { futureEvent } from 'src/modules/shared/constants/event.constant';
-import BettingEvent from 'src/modules/shared/events/betting.event';
+import BetResultEvent from 'src/modules/shared/events/betting.event';
 
 @WebSocketGateway({ namespace: '/future', cors: true })
 export default class FutureGateway implements NestGateway {
@@ -38,12 +38,12 @@ export default class FutureGateway implements NestGateway {
     // return this.logger.log(`Client connected: ${client.id}`);
   }
 
-  public handleEmitBetResult(payload: BettingEvent) {
+  public handleEmitBetResult(payload: BetResultEvent) {
     return this.server.to(payload.userId).emit('bet-results', payload);
   }
 
   @OnEvent(futureEvent.BET_RESULT)
-  streamingDataReceiver(payload: BettingEvent) {
+  streamingDataReceiver(payload: BetResultEvent) {
     this.handleEmitBetResult(payload);
   }
 }

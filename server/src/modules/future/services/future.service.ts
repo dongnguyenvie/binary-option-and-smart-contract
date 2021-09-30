@@ -48,7 +48,7 @@ export default class FutureService implements OnModuleInit {
       bettors.forEach((bettor) => {
         const job = new BetCalculateJob({
           ...bettor,
-          bestResult: bettor.betType === canlde.result ? BetResult.WIN : BetResult.LOSE,
+          betResult: bettor.betType === canlde.result ? BetResult.WIN : BetResult.LOSE,
         });
         this.betQueue.add(CALCULATE_BET, job, {
           removeOnComplete: true,

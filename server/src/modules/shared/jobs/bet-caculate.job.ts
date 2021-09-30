@@ -6,9 +6,9 @@ export default class BetCalculateJob {
   public openTime: number;
   public userId: string;
   public orderId: string;
-  public bestResult: BetResult;
+  public betResult: BetResult;
 
-  constructor(partical: Partial<BetCalculateJob>) {
-    Object.assign(this, partical);
+  constructor(partial: Partial<BetCalculateJob>) {
+    Object.assign(this, partial);
   }
 }
