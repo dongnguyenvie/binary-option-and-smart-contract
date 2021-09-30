@@ -9,7 +9,7 @@ import { BetResult } from 'src/modules/shared/constants/common.contant';
 import dayjs from 'src/modules/shared/helpers/dayjs';
 import { Bettor } from 'src/modules/shared/interfaces/common.interface';
 import BetCalculateJob from 'src/modules/shared/jobs/bet-caculate.job';
-import { BET_CALCULATOR } from '../constants/future.constant';
+import { BET_CALCULATOR, CALCULATE_BET } from '../constants/future.constant';
 
 @Injectable()
 export default class FutureService implements OnModuleInit {
@@ -50,7 +50,7 @@ export default class FutureService implements OnModuleInit {
           ...bettor,
           bestResult: bettor.betType === canlde.result ? BetResult.WIN : BetResult.LOSE,
         });
-        this.betQueue.add(job, {
+        this.betQueue.add(CALCULATE_BET, job, {
           removeOnComplete: true,
         });
       });
