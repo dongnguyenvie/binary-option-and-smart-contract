@@ -1,32 +1,33 @@
+import { OnEvent } from '@nestjs/event-emitter';
+import { JwtService } from '@nestjs/jwt';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { NestGateway } from '@nestjs/websockets/interfaces/nest-gateway.interface';
-import { map } from 'rxjs';
 import { Socket, Server } from 'socket.io';
-import DataFeedService from 'src/modules/data-feed/services/data-feed.service';
+import { futureEvent } from 'src/modules/shared/constants/event.constant';
+import BettingEvent from 'src/modules/shared/events/betting.event';
 
 @WebSocketGateway({ namespace: '/future' })
 export default class FutureGateway implements NestGateway {
-  constructor(private readonly datafeedSvc: DataFeedService) {}
+  constructor(private jwtService: JwtService) {}
 
   @WebSocketServer() server: Server;
 
-  public afterInit(server: Server): void {
-    this.datafeedSvc.fromStream().subscribe((candles) => {
-      server.emit('datafeed', candles);
-    });
-  }
+  public afterInit(server: Server): void {}
 
-  @SubscribeMessage('authorization') //symbolSub
+  @SubscribeMessage('authorization')
   public authorization(client: Socket, token: string): void {
-    // if (!apiKey || !this.apiKeys[apiKey]) {
-    //   client.emit('unauthenticated', {
-    //     message: 'authencation unsuccessfully',
-    //   });
-    //   client.disconnect();
-    //   return;
-    // }
-    // client.handshake.auth.isVerify = true;
-    // client.emit('authenticated', { message: 'authencation successfully' });
+    console.log('client.handshake', client.handshake);
+    const isAuth = this.jwtService.verify(token);
+    if (!isAuth) {
+      client.disconnect();
+      return;
+    }
+    client.handshake.auth.isVerify = true;
+    const user = this.jwtService.decode(token) as any;
+    client.join(user.id);
+    process.nextTick(async () => {
+      client.emit('verification', user);
+    });
   }
 
   public handleDisconnect(client: Socket): void {
@@ -35,5 +36,14 @@ export default class FutureGateway implements NestGateway {
 
   public handleConnection(client: Socket): void {
     // return this.logger.log(`Client connected: ${client.id}`);
+  }
+
+  public handleEmitBetResult(payload: BettingEvent) {
+    return this.server.to(payload.userId).emit('bet-results', payload);
+  }
+
+  @OnEvent(futureEvent.BET_RESULT)
+  streamingDataReceiver(payload: BettingEvent) {
+    this.handleEmitBetResult(payload);
   }
 }

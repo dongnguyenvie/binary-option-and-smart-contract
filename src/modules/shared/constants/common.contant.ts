@@ -27,3 +27,8 @@ export enum OrderStatus {
   WAITING = 2,
   FINiSH = 3,
 }
+
+export enum BetResult {
+  LOSE = 0,
+  WIN = 1,
+}

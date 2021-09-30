@@ -23,6 +23,7 @@
     "initdb": "npm run build && npm run typeorm:schema:sync"
   },
   "dependencies": {
+    "@nestjs/bull": "^0.4.1",
     "@nestjs/common": "^8.0.7",
     "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.7",
@@ -35,6 +36,7 @@
     "@nestjs/typeorm": "^8.0.2",
     "@nestjs/websockets": "^8.0.8",
     "bcrypt": "^5.0.1",
+    "bull": "^3.29.2",
     "cache-manager": "^3.4.4",
     "cache-manager-redis-store": "^2.0.0",
     "class-transformer": "^0.4.0",
@@ -56,6 +58,7 @@
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
     "@types/bcrypt": "^5.0.0",
+    "@types/bull": "^3.15.5",
     "@types/cache-manager": "^3.4.2",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.0.1",

@@ -46,6 +46,7 @@ export default class OrderService {
       amount: result.amount,
       openTime: result.openTime,
       userId: result.userId,
+      orderId: result.id,
     });
 
     return {
