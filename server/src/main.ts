@@ -11,7 +11,7 @@ async function bootstrap() {
 
   app.enableCors({
     credentials: true,
-    origin: (configService.get('ORIGIN_DOMAIN') || '').split(','),
+    origin: '*',
   });
 
   app.setGlobalPrefix('api');
