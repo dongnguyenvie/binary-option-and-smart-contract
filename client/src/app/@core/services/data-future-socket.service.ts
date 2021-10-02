@@ -2,12 +2,13 @@ import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { Manager, Socket } from 'socket.io-client';
 import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
+
+const NAMESPACE = '/data-future';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SocketService {
+export class DataFutureSocketService {
   private socketUrl = environment.socketUrl;
   private isSubscriber: any = null;
   private _socket!: Socket;
@@ -51,49 +52,24 @@ export class SocketService {
     });
   }
 
-  connectSocketWithToken(token: string, userId?: string): any {
-    console.log('[connectSocketWithToken] method call=> userId', userId);
-    console.log('token:' + token);
-    console.log(this.socketUrl);
+  connectSocket(): any {
     if (!this._socket) {
       const manager = new Manager(this.socketUrl);
-      this._socket = manager.socket('/data-future', {
-        auth: {
-          authorization: `Bearer ${token}`,
-          userId,
-        },
-      });
-      console.log(this._socket);
+      this._socket = manager.socket(NAMESPACE, {});
       return this.initSocket();
     }
-    console.log('[connectSocketWithToken] socket existed', this._socket);
-    console.log(' User register => userId: ' + userId);
-    if (userId !== undefined) {
-      this._socket.disconnect();
-      this._socket = null as any;
-      const manager = new Manager(this.socketUrl);
-      this._socket = manager.socket('/data-future', {
-        auth: {
-          authorization: `Bearer ${token}`,
-          userId,
-        },
-      });
-      console.log(this._socket);
-      return this.initSocket();
-    }
-    console.log('[connectSocketWithToken] socket existed', this._socket);
+    return this._socket;
   }
 
   private addChartingListeners() {
     if (this._socket) {
-      this._socket.on('datafeed', (obj) => {
+      this._socket.on('datafeed', obj => {
         this._chartSubject.next(obj);
       });
     }
   }
 
   sendToSocket(eventName: string, ...args: any[]) {
-    // console.log(this._socket);
     if (this._socket) {
       console.log(eventName);
       if (eventName === 'datafeed') {
@@ -104,7 +80,7 @@ export class SocketService {
   }
 
   disconnect() {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       if (this._socket) {
         this._socket.disconnect();
         resolve(true);
