@@ -9,8 +9,8 @@ const NAMESPACE = '/future';
   providedIn: 'root',
 })
 export class FutureSocketService {
-  private socketUrl = environment.socketUrl;
-  private isSubscriber: any = null;
+  private _socketUrl = environment.socketUrl;
+  private _isSubscriber: any;
   private _socket!: Socket;
 
   private _chartSubject = new Subject<{
@@ -28,85 +28,63 @@ export class FutureSocketService {
     return this._chartSubject;
   }
 
-  get isSocketReady() {
+  get isReady() {
     return !!this._socket;
   }
 
   constructor() {}
 
-  private initSocket(): Promise<void> {
-    console.log('call init socket');
+  private initSocket(token: string): Promise<void> {
     return new Promise((resolve: () => void) => {
       this._socket.on('connect', () => {
-        console.log(`Socket Connected ${this._socket.id}`);
-        this.addChartingListeners();
+        this.addListeners();
+        this.authConnect(token);
         this._socketSubject.next();
         resolve();
       });
       this._socket.on('disconnect', () => {
-        console.log(`disconnect`);
+        console.info(`disconnect`);
       });
       this._socket.on('reconnect', () => {
-        console.log('socket reconnected');
+        console.info('socket reconnected');
       });
     });
   }
 
-  connectSocket(token: string, userId?: string): any {
-    console.log('[connectSocketWithToken] method call=> userId', userId);
-    console.log('token:' + token);
-    console.log(this.socketUrl);
-    if (!this._socket) {
-      const manager = new Manager(this.socketUrl);
-      this._socket = manager.socket(NAMESPACE, {
-        auth: {
-          authorization: `Bearer ${token}`,
-          userId,
-        },
-      });
-      console.log(this._socket);
-      return this.initSocket();
-    }
-    console.log('[connectSocketWithToken] socket existed', this._socket);
-    console.log(' User register => userId: ' + userId);
-    if (userId !== undefined) {
-      this._socket.disconnect();
-      this._socket = null as any;
-      const manager = new Manager(this.socketUrl);
-      this._socket = manager.socket(NAMESPACE, {
-        auth: {
-          authorization: `Bearer ${token}`,
-          userId,
-        },
-      });
-      console.log(this._socket);
-      return this.initSocket();
-    }
-    console.log('[connectSocketWithToken] socket existed', this._socket);
+  authConnect(token: string) {
+    this._socket.emit('authorization', token);
   }
 
-  private addChartingListeners() {
-    if (this._socket) {
-      this._socket.on('datafeed', obj => {
-        this._chartSubject.next(obj);
-      });
+  connectSocket(token: string): any {
+    if (!this._socket) {
+      const manager = new Manager(this._socketUrl);
+      this._socket = manager.socket(NAMESPACE);
+      return this.initSocket(token);
     }
+  }
+
+  private addListeners() {
+    if (!this.isReady) return;
+    this._socket.on('future:auth', payload => {
+      console.info('user is verified');
+    });
+
+    this._socket.on('future:bet-results', payload => {
+      console.info('my result', payload);
+    });
   }
 
   sendToSocket(eventName: string, ...args: any[]) {
-    // console.log(this._socket);
-    if (this._socket) {
-      console.log(eventName);
-      if (eventName === 'datafeed') {
-        this.isSubscriber = args;
-      }
-      this._socket.emit(eventName, ...args);
+    if (!this.isReady) return;
+    if (eventName === 'datafeed') {
+      this._isSubscriber = args;
     }
+    this._socket.emit(eventName, ...args);
   }
 
   disconnect() {
     return new Promise(resolve => {
-      if (this._socket) {
+      if (this.isReady) {
         this._socket.disconnect();
         resolve(true);
       }

@@ -18,19 +18,24 @@ export default class FutureGateway implements NestGateway {
   public authorization(client: Socket, token: string): void {
     const isAuth = this.jwtService.verify(token);
     if (!isAuth) {
-      client.disconnect();
       return;
     }
     const user = this.jwtService.decode(token) as any;
-    client.handshake.auth.isVerify = true;
     client.handshake.auth.user = user;
     client.join(user.id);
     process.nextTick(async () => {
-      client.emit('verification', user);
+      client.emit('future:auth', user);
     });
   }
 
-  public handleDisconnect(client: Socket): void {
+  @SubscribeMessage('mirror')
+  public mirror(client: Socket, msg: string): void {
+    const isVerified = IsVerified(client);
+    if (!isVerified) return;
+    client.to(getMyRoom(client)).emit('mirror', msg);
+  }
+
+  public handleDisconnect(client: Socket<any>): void {
     // return this.logger.log(`Client disconnected: ${client.id}`);
   }
 
@@ -39,11 +44,19 @@ export default class FutureGateway implements NestGateway {
   }
 
   public handleEmitBetResult(payload: BetResultEvent) {
-    return this.server.to(payload.userId).emit('bet-results', payload);
+    return this.server.to(payload.userId).emit('future:bet-results', payload);
   }
 
   @OnEvent(futureEvent.BET_RESULT)
   handleEmitBetResultEvent(payload: BetResultEvent) {
     this.handleEmitBetResult(payload);
   }
+}
+
+function IsVerified(client: Socket) {
+  return !!client.handshake.auth.user;
+}
+
+function getMyRoom(client: Socket) {
+  return client.handshake.auth.user.id;
 }

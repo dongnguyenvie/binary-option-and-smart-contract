@@ -10,7 +10,7 @@ const NAMESPACE = '/data-future';
 })
 export class DataFutureSocketService {
   private socketUrl = environment.socketUrl;
-  private isSubscriber: any = null;
+  private _isSubscriber: any = null;
   private _socket!: Socket;
 
   private _chartSubject = new Subject<{
@@ -28,7 +28,7 @@ export class DataFutureSocketService {
     return this._chartSubject;
   }
 
-  get isSocketReady() {
+  get isReady() {
     return !!this._socket;
   }
 
@@ -38,50 +38,48 @@ export class DataFutureSocketService {
     console.log('call init socket');
     return new Promise((resolve: () => void) => {
       this._socket.on('connect', () => {
-        console.log(`Socket Connected ${this._socket.id}`);
-        this.addChartingListeners();
+        console.info(`Socket Connected ${this._socket.id}`);
+        this.addListeners();
         this._socketSubject.next();
         resolve();
       });
       this._socket.on('disconnect', () => {
-        console.log(`disconnect`);
+        console.info(`disconnect`);
       });
       this._socket.on('reconnect', () => {
-        console.log('socket reconnected');
+        console.info('socket reconnected');
       });
     });
   }
 
   connectSocket(): any {
-    if (!this._socket) {
-      const manager = new Manager(this.socketUrl);
+    if (!this.isReady) {
+      const manager = new Manager(this.socketUrl, { forceNew: true });
       this._socket = manager.socket(NAMESPACE, {});
       return this.initSocket();
     }
     return this._socket;
   }
 
-  private addChartingListeners() {
-    if (this._socket) {
-      this._socket.on('datafeed', obj => {
-        this._chartSubject.next(obj);
-      });
-    }
+  private addListeners() {
+    if (!this.isReady) return;
+    this._socket.on('datafeed', obj => {
+      this._chartSubject.next(obj);
+    });
   }
 
   sendToSocket(eventName: string, ...args: any[]) {
-    if (this._socket) {
-      console.log(eventName);
-      if (eventName === 'datafeed') {
-        this.isSubscriber = args;
-      }
-      this._socket.emit(eventName, ...args);
+    console.info(eventName, args);
+    if (!this.isReady) return;
+    if (eventName === 'datafeed') {
+      this._isSubscriber = args;
     }
+    this._socket.emit(eventName, ...args);
   }
 
   disconnect() {
     return new Promise(resolve => {
-      if (this._socket) {
+      if (this.isReady) {
         this._socket.disconnect();
         resolve(true);
       }

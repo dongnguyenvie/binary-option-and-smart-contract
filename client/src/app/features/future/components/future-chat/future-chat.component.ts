@@ -3,6 +3,7 @@ import { createChart, CrosshairMode, ISeriesApi } from 'lightweight-charts';
 import { Candle, DateChart } from './interface';
 import { map } from 'rxjs';
 import { DataFutureSocketService } from 'src/app/@core/services/data-future-socket.service';
+import { FutureSocketService } from 'src/app/@core/services/future-socket.service';
 
 @Component({
   selector: 'app-future-chat',
@@ -24,7 +25,7 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
   currentBusinessDay = { day: 29, month: 5, year: 2019 };
   ticksInCurrentBar = 0;
 
-  constructor(private socketService: DataFutureSocketService) {
+  constructor(private dataFutureSvc: DataFutureSocketService, private futureSvc: FutureSocketService) {
     this.currentBar = {
       open: 0,
       high: 0,
@@ -32,7 +33,8 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
       close: 0,
       time: this.currentBusinessDay,
     };
-    this.socketService.connectSocket();
+    this.dataFutureSvc.connectSocket();
+    this.futureSvc.connectSocket('tokenxxxxxxx');
   }
 
   ngOnInit(): void {}
@@ -47,7 +49,7 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
       },
     });
     this.candleSeries = chart.addCandlestickSeries();
-    this.socketService.chart
+    this.dataFutureSvc.chart
       .pipe(
         map((candles: any) => {
           return candles.map((candle: any) => {
