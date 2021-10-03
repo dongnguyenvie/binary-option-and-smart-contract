@@ -4,6 +4,8 @@ import { Candle, DateChart } from './interface';
 import { map } from 'rxjs';
 import { DataFutureSocketService } from 'src/app/@core/services/data-future-socket.service';
 import { FutureSocketService } from 'src/app/@core/services/future-socket.service';
+import { checkCandleDisable } from './utils/future-chat.util';
+import { BUY_CANDLE, SELL_CANDLE } from './constants/future-chat.constant';
 
 @Component({
   selector: 'app-future-chat',
@@ -16,6 +18,7 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
   chart!: ElementRef;
   currentBar: Candle;
   candleSeries: ISeriesApi<'Candlestick'>;
+  volumeSeries: ISeriesApi<'Histogram'>;
 
   lastClose: number;
   lastIndex: number;
@@ -44,11 +47,40 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
     const chart = createChart(this.chart.nativeElement, {
       width: 600,
       height: 300,
-      crosshair: {
-        mode: CrosshairMode.Normal,
+      rightPriceScale: {
+        scaleMargins: {
+          top: 0.3,
+          bottom: 0.25,
+        },
+        borderVisible: false,
+      },
+      layout: {
+        backgroundColor: '#131722',
+        textColor: '#d1d4dc',
+      },
+      grid: {
+        vertLines: {
+          color: 'rgba(42, 46, 57, 0)',
+        },
+        horzLines: {
+          color: 'rgba(42, 46, 57, 0.6)',
+        },
       },
     });
+
     this.candleSeries = chart.addCandlestickSeries();
+    this.volumeSeries = chart.addHistogramSeries({
+      color: '#26a69a',
+      priceFormat: {
+        type: 'volume',
+      },
+      priceScaleId: '',
+      scaleMargins: {
+        top: 0.8,
+        bottom: 0,
+      },
+    });
+
     this.dataFutureSvc.chart
       .pipe(
         map((candles: any) => {
@@ -65,6 +97,29 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
           chart.timeScale().fitContent();
           isScale = true;
         }
+      });
+
+    this.dataFutureSvc.chart
+      .pipe(
+        map((candles: any) => {
+          return candles.map((candle: any) => {
+            const [time, tick] = candle;
+            let color = 'rgba(171, 183, 183, 0.5)';
+            const isCandleDisable = checkCandleDisable(time);
+            if (!isCandleDisable) {
+              const isUptrend = tick.close - tick.open >= 0;
+              color = isUptrend ? BUY_CANDLE : SELL_CANDLE;
+            }
+            return {
+              time: time / 1000,
+              value: tick.volume / 300,
+              color: color,
+            };
+          });
+        }),
+      )
+      .subscribe(data => {
+        this.volumeSeries.setData(data);
       });
   }
 
