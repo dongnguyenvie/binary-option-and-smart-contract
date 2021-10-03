@@ -1,0 +1,46 @@
+@import './../../../@theme/styles/themes.scss';
+
+section {
+  display: block;
+}
+
+.form-control-group {
+  margin-bottom: 2rem;
+}
+.title {
+  margin-bottom: 2rem;
+  margin-top: 0;
+  text-align: center;
+}
+.another-action {
+  margin-top: 2rem;
+  display: block;
+  text-align: center;
+  font-size: 14px;
+}
+button {
+  cursor: pointer;
+  outline: none;
+  i {
+    cursor: pointer;
+  }
+}
+
+.accept-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@include nb-install-component {
+  .text-link {
+    color: nb-theme(text-basic-color);
+    font-size: 14px;
+  }
+  .sub-title {
+    font-size: 16px;
+  }
+  .label {
+    font-size: 0.84rem;
+  }
+}

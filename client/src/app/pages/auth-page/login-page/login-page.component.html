@@ -1,0 +1,132 @@
+<div class="row">
+  <div class="col-sm-12">
+    <nb-alert *ngIf="message" accent="warning" closable (close)="closeAlert()">
+      <p style="font-size: 1.2rem; line-height: 1.6">
+        {{ message }}
+      </p>
+    </nb-alert>
+  </div>
+</div>
+<div [nbSpinner]="submitted" nbSpinnerStatus="primary" nbSpinnerSize="large">
+  <div>
+    <h1 id="title" class="title">Login</h1>
+    <p class="sub-title">Hello! Login with account</p>
+
+    <form
+      (ngSubmit)="login()"
+      [formGroup]="loginForm"
+      aria-labelledby="title"
+      novalidate
+    >
+      <div class="form-control-group">
+        <label class="label" for="input-email">Email address:</label>
+        <input
+          nbInput
+          fullWidth
+          autofocus
+          autocomplete="false"
+          formControlName="email"
+          name="email"
+          id="input-email"
+          placeholder="Enter your email address"
+          required
+          fieldSize="large"
+          [status]="
+            loginForm.get('email')!.touched
+              ? loginForm.get('email')!.dirty
+                ? loginForm.get('email')!.invalid
+                  ? 'danger'
+                  : 'success'
+                : 'primary'
+              : 'primary'
+          "
+          email="true"
+        />
+        <ng-container
+          *ngIf="
+            loginForm.get('email')!.invalid &&
+            loginForm.get('email')!.touched &&
+            loginForm.get('email')!.dirty
+          "
+        >
+          <p
+            class="caption status-danger"
+            *ngIf="getError('email', 'required')"
+          >
+            Email is required
+          </p>
+          <p class="caption status-danger" *ngIf="getError('email', 'email')">
+            Email not valid
+          </p>
+        </ng-container>
+      </div>
+
+      <div class="form-control-group">
+        <label class="label" for="input-password">Password:</label>
+        <input
+          fieldSize="large"
+          nbInput
+          fullWidth
+          formControlName="password"
+          name="password"
+          type="password"
+          id="input-password"
+          placeholder="Enter your password"
+          [status]="
+            loginForm.get('password')!.touched
+              ? loginForm.get('password')!.invalid
+                ? loginForm.get('password')!.invalid
+                  ? 'danger'
+                  : 'success'
+                : 'primary'
+              : 'primary'
+          "
+        />
+        <ng-container
+          *ngIf="
+            loginForm.get('password')!.invalid &&
+            loginForm.get('password')!.touched &&
+            loginForm.get('password')!.dirty
+          "
+        >
+          <p
+            class="caption status-danger"
+            *ngIf="loginForm.get('password')!.getError('required')"
+          >
+            Password is required
+          </p>
+          <p
+            class="caption status-danger"
+            *ngIf="getError('password', 'minlength')"
+          >
+            Password is at least 6 characters
+          </p>
+          <p
+            class="caption status-danger"
+            *ngIf="getError('password', 'maxlength')"
+          >
+            Password up to 50 characters
+          </p>
+        </ng-container>
+      </div>
+      <button
+        nbButton
+        fullWidth
+        type="submit"
+        status="success"
+        [class.btn-pulse]="submitted"
+        size="large"
+      >
+        Login
+      </button>
+    </form>
+    <section
+      class="another-action"
+      aria-label="Register"
+      style="color: #3366ff"
+    >
+      Not have account
+      <a class="text-link" [routerLink]="['../register']">Register</a>
+    </section>
+  </div>
+</div>

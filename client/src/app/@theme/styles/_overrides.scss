@@ -1,0 +1,25 @@
+@import './themes';
+
+@mixin nb-overrides() {
+  nb-select.size-medium button {
+    padding: 0.4375rem 2.2rem 0.4375rem 1.125rem !important;
+
+    nb-icon {
+      right: 0.41rem !important;
+    }
+  }
+  [nbButton].size-medium {
+    padding: 0.6875rem 1.125rem !important;
+  }
+  .label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.7rem;
+  }
+  [nbInput].size-medium {
+    font-size: 1rem;
+  }
+  a {
+    color: nb-theme(color-link);
+  }
+}

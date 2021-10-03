@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;800&display=swap');
+// themes - our custom or/and out of the box themes
+@import 'themes';
+
+// framework component themes (styles tied to theme variables)
+@import '~@nebular/theme/styles/globals';
+
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/grid';
+
+// loading progress bar theme
+@import './pace.theme';
+
+@import './layout';
+@import './overrides';
+
+// install the framework and custom global styles
+@include nb-install() {
+  // framework global styles
+  @include nb-theme-global();
+  @include ngx-layout();
+  // loading progress bar
+  @include ngx-pace-theme();
+
+  @include nb-overrides();
+  .scrollable::-webkit-scrollbar {
+    width: 0.3125rem;
+    height: 0.7125rem;
+    cursor: pointer;
+  }
+  .scrollable::-webkit-scrollbar-thumb {
+    // background: nb-theme(scrollbar-color);
+    background: nb-theme(border-primary-color-2);
+    cursor: pointer;
+    border-radius: 0.15625rem;
+  }
+  .scrollable::-webkit-scrollbar-track {
+    background: nb-theme(scrollbar-background-color);
+  }
+}
+
+html {
+  font-size: 15px;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-transition: 'color 9999s ease-out, background-color 9999s ease-out';
+  -webkit-transition-delay: 9999s;
+}
+
+@-webkit-keyframes autofill {
+  0%,
+  100% {
+    color: #666;
+    background: transparent;
+  }
+}
+.ng-invalid.ng-touched {
+  border-color: nb-theme(text-danger-color);
+}
+
+.caption{
+  margin-top: 3px;
+  font-size: 14px!important;
+}

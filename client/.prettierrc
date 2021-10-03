@@ -4,6 +4,6 @@
   "endOfLine": "auto",
   "arrowParens": "avoid",
   "tabWidth": 2,
-  "printWidth": 180,
+  "printWidth": 80,
   "overrides": []
 }

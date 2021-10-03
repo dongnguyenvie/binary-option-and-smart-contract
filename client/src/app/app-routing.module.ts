@@ -3,29 +3,25 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'future',
-    loadChildren: () => import('./pages/future-page/future-page.module').then(m => m.FuturePageModule),
-  },
-  {
-    path: 'login',
-    loadChildren: () => import('./pages/login-page/login-page.module').then(m => m.LoginPageModule),
-  },
-  {
-    path: 'register',
-    loadChildren: () => import('./pages/register-page/register-page.module').then(m => m.RegisterPageModule),
-  },
-  {
-    path: 'profile',
-    loadChildren: () => import('./pages/profile-page/profile-page-routing.module').then(m => m.ProfilePageRoutingModule),
-  },
-  {
     path: '',
-    redirectTo: 'future',
+    redirectTo: 'pages',
     pathMatch: 'full',
   },
   {
+    path: 'auth',
+    loadChildren: () =>
+      import('./pages/auth-page/auth-page.module').then(m => m.AuthModule),
+  },
+  {
+    path: 'pages',
+    loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule),
+  },
+  {
     path: '**',
-    loadChildren: () => import('./pages/not-found-page/not-found-page.module').then(m => m.NotFoundPageModule),
+    loadChildren: () =>
+      import('./pages/not-found-page/not-found-page.module').then(
+        m => m.NotFoundPageModule,
+      ),
   },
 ];
 
