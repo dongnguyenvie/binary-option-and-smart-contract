@@ -13,8 +13,15 @@ export default class DataFutureGateway implements NestGateway {
 
   public afterInit(server: Server): void {
     this.datafeedSvc.fromStream().subscribe((candles) => {
-      server.emit('datafeed', candles);
+      server.emit('datafuture:datafeed', candles);
     });
+    setInterval(() => {
+      server.emit('datafuture:orders', {
+        username: `user_${Math.floor(1000 * Math.random())}`,
+        amount: Math.floor(1000 * Math.random()),
+        betType: Math.max(1, Math.floor(Math.random() * 3)),
+      });
+    }, 1000);
   }
 
   public handleDisconnect(client: Socket): void {

@@ -17,22 +17,22 @@ export default class FutureGateway implements NestGateway {
 
   @SubscribeMessage('authorization')
   public authorization(client: Socket, token: string): void {
-    const isAuth = this.jwtService.verify(token);
-    if (!isAuth) {
-      return;
-    }
-    const user = this.jwtService.decode(token) as any;
+    try {
+      const isAuth = this.jwtService.verify(token);
+      if (!isAuth) return;
+      const user = this.jwtService.decode(token) as any;
 
-    this.eventEmitter.emit(
-      walletEvent.SYNC_WALLET_TO_MEMORY,
-      new SyncWalletToMemoryEvent({ userId: user.id }),
-    );
+      this.eventEmitter.emit(
+        walletEvent.SYNC_WALLET_TO_MEMORY,
+        new SyncWalletToMemoryEvent({ userId: user.id }),
+      );
 
-    client.handshake.auth.user = user;
-    client.join(user.id);
-    process.nextTick(async () => {
-      client.emit('future:auth', user);
-    });
+      client.handshake.auth.user = user;
+      client.join(user.id);
+      process.nextTick(async () => {
+        client.emit('future:auth', user);
+      });
+    } catch (error) {}
   }
 
   @SubscribeMessage('mirror')

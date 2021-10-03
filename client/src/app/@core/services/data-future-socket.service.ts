@@ -18,10 +18,8 @@ export class DataFutureSocketService {
     listenerGuid: string;
   }>();
 
-  private _socketSubject = new Subject<void>();
-
   get socket() {
-    return this._socketSubject;
+    return this._socket;
   }
 
   get chart() {
@@ -40,7 +38,6 @@ export class DataFutureSocketService {
       this._socket.on('connect', () => {
         console.info(`Socket Connected ${this._socket.id}`);
         this.addListeners();
-        this._socketSubject.next();
         resolve();
       });
       this._socket.on('disconnect', () => {
@@ -63,7 +60,7 @@ export class DataFutureSocketService {
 
   private addListeners() {
     if (!this.isReady) return;
-    this._socket.on('datafeed', obj => {
+    this._socket.on('datafuture:datafeed', obj => {
       this._chartSubject.next(obj);
     });
   }
@@ -71,9 +68,6 @@ export class DataFutureSocketService {
   sendToSocket(eventName: string, ...args: any[]) {
     console.info(eventName, args);
     if (!this.isReady) return;
-    if (eventName === 'datafeed') {
-      this._isSubscriber = args;
-    }
     this._socket.emit(eventName, ...args);
   }
 

@@ -1,3 +1,22 @@
-<div class="bg-danger" style="height: 300px;">
-    This is monitor
+<div class="p-2" style="height: 300px; overflow-y: scroll; overflow-x: hidden;background:#272c31">
+    <div class="row flex-column" *ngFor="let bettor of bettors">
+        <div class="col row">
+            <div class="col text-danger">
+                BTCUSDT
+            </div>
+            <div class="col">
+                {{bettor.username}}
+            </div>
+            <div class="col"
+                [ngClass]="{'text-danger': betType.SELL === bettor.betType, 'text-success': betType.BUY === bettor.betType}">
+                {{bettor.amount}}
+            </div>
+            <div class="col">
+                {{bettor.amount}}
+            </div>
+            <div class="col">
+                539
+            </div>
+        </div>
+    </div>
 </div>
