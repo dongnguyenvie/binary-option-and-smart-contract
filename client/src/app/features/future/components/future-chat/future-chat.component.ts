@@ -1,11 +1,22 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { createChart, CrosshairMode, ISeriesApi } from 'lightweight-charts';
 import { Candle, DateChart } from './interface';
 import { map } from 'rxjs';
 import { DataFutureSocketService } from 'src/app/@core/services/data-future-socket.service';
 import { FutureSocketService } from 'src/app/@core/services/future-socket.service';
 import { checkCandleDisable } from './utils/future-chat.util';
-import { BUY_CANDLE, SELL_CANDLE } from './constants/future-chat.constant';
+import {
+  BUY_CANDLE,
+  DISABLE_CANDLE,
+  SELL_CANDLE,
+} from './constants/future-chat.constant';
 
 @Component({
   selector: 'app-future-chat',
@@ -28,7 +39,10 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
   currentBusinessDay = { day: 29, month: 5, year: 2019 };
   ticksInCurrentBar = 0;
 
-  constructor(private dataFutureSvc: DataFutureSocketService, private futureSvc: FutureSocketService) {
+  constructor(
+    private dataFutureSvc: DataFutureSocketService,
+    private futureSvc: FutureSocketService,
+  ) {
     this.currentBar = {
       open: 0,
       high: 0,
@@ -79,6 +93,9 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
         top: 0.8,
         bottom: 0,
       },
+      baseLineVisible: false,
+      lastValueVisible: false,
+      priceLineVisible: false,
     });
 
     this.dataFutureSvc.chart
@@ -104,7 +121,7 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
         map((candles: any) => {
           return candles.map((candle: any) => {
             const [time, tick] = candle;
-            let color = 'rgba(171, 183, 183, 0.5)';
+            let color = DISABLE_CANDLE;
             const isCandleDisable = checkCandleDisable(time);
             if (!isCandleDisable) {
               const isUptrend = tick.close - tick.open >= 0;
