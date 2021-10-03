@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  socketUrl: 'localhost:5000/data-future',
+  socketUrl: 'localhost:5000',
+  apiUrl: 'localhost:5000',
 };
 
 /*
