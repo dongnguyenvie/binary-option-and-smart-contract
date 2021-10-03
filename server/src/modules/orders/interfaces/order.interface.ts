@@ -15,3 +15,9 @@ export interface CreateOrder {
   amount: number;
   asset: string;
 }
+
+export interface UpdateOrder {
+  status: OrderStatus;
+  profit: number;
+  orderId: string;
+}

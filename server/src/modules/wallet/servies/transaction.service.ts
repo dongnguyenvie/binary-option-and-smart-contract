@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { TransactionType } from 'src/modules/shared/constants/common.contant';
 import { transactionEvent } from 'src/modules/shared/constants/event.constant';
+import CreateBetTransactionEvent from 'src/modules/shared/events/create-bet-transaction.event';
 import { TransactionStatus } from '../constants/transaction.constant';
 import { CreateDepositTransaction, CreateTransaction } from '../interfaces/transaction.interface';
 import TransactionRepository from '../repositories/transaction.repository';
@@ -61,8 +62,23 @@ export default class TransactionService {
     );
   }
 
+  async createBetTransaction(payload: any) {
+    const transaction = this.transactionRepo.create({
+      userId: payload.userId,
+      walletId: payload.walletId,
+      credit: payload.credit,
+      debit: payload.debit,
+      description: payload.description,
+      status: TransactionStatus.PROCESSING,
+      ...(payload.profit > 0 ? { credit: payload.profit } : { debit: Math.abs(payload.debit) }),
+      type: TransactionType.BETTING,
+    });
+    const results = await this.transactionRepo.save(transaction);
+    return results;
+  }
+
   @OnEvent(transactionEvent.CREATE_BET_TRANSACTION)
-  handleCreateBetTransactionEvent(payload: any) {
-    console.log('payload create order', payload);
+  createBetTransactionEventListener(payload: CreateBetTransactionEvent) {
+    this.createBetTransaction(payload);
   }
 }

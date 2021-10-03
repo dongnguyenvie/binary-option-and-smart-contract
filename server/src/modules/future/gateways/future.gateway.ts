@@ -1,14 +1,15 @@
-import { OnEvent } from '@nestjs/event-emitter';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { JwtService } from '@nestjs/jwt';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { NestGateway } from '@nestjs/websockets/interfaces/nest-gateway.interface';
 import { Socket, Server } from 'socket.io';
-import { futureEvent } from 'src/modules/shared/constants/event.constant';
+import { futureEvent, walletEvent } from 'src/modules/shared/constants/event.constant';
 import BetResultEvent from 'src/modules/shared/events/betting.event';
+import SyncWalletToMemoryEvent from 'src/modules/shared/events/sync-wallet-to-memory-event';
 
 @WebSocketGateway({ namespace: '/future', cors: true })
 export default class FutureGateway implements NestGateway {
-  constructor(private jwtService: JwtService) {}
+  constructor(private jwtService: JwtService, private eventEmitter: EventEmitter2) {}
 
   @WebSocketServer() server: Server;
 
@@ -21,6 +22,12 @@ export default class FutureGateway implements NestGateway {
       return;
     }
     const user = this.jwtService.decode(token) as any;
+
+    this.eventEmitter.emit(
+      walletEvent.SYNC_WALLET_TO_MEMORY,
+      new SyncWalletToMemoryEvent({ userId: user.id }),
+    );
+
     client.handshake.auth.user = user;
     client.join(user.id);
     process.nextTick(async () => {
@@ -48,7 +55,7 @@ export default class FutureGateway implements NestGateway {
   }
 
   @OnEvent(futureEvent.BET_RESULT)
-  handleEmitBetResultEvent(payload: BetResultEvent) {
+  emitBetResultEventListener(payload: BetResultEvent) {
     this.handleEmitBetResult(payload);
   }
 }

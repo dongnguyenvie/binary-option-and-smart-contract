@@ -1,10 +1,10 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import { PREFIX_REDIS, TTL } from './betting-state.constant';
+import { BETTING_PROVIDER, PREFIX_REDIS, TTL } from './betting-state.constant';
 
 @Injectable()
 export class BettingStateService {
-  constructor(@Inject(CACHE_MANAGER) private readonly cache: Cache) {}
+  constructor(@Inject(BETTING_PROVIDER) private readonly cache: Cache) {}
 
   async get<T = any>(key, defaultValue = undefined): Promise<T> {
     try {

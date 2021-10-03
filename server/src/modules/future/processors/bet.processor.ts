@@ -1,9 +1,10 @@
 import { OnQueueActive, OnQueueCompleted, OnQueueFailed, Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 import { EventEmitter2 } from 'eventemitter2';
-import { BetResult } from 'src/modules/shared/constants/common.contant';
-import { futureEvent } from 'src/modules/shared/constants/event.constant';
+import { BetResult, OrderStatus } from 'src/modules/shared/constants/common.contant';
+import { futureEvent, orderEvent } from 'src/modules/shared/constants/event.constant';
 import BetResultEvent from 'src/modules/shared/events/betting.event';
+import ResolveBetOrderEvent from 'src/modules/shared/events/resolve-bet-order.event';
 import BetCalculateJob from 'src/modules/shared/jobs/bet-caculate.job';
 import { BET_CALCULATOR, CALCULATE_BET } from '../constants/future.constant';
 
@@ -39,16 +40,25 @@ export default class BetProcessor {
     const bettor = job.data;
 
     try {
-      // TODO: working with order service, update order, creatr transaction
-      // if (bettor.betResult === BetResult.WIN) {
-      // }
-      const amount = bettor.betResult === BetResult.WIN ? (bettor.amount * 80) / 100 : bettor.amount;
+      const profit = bettor.betResult === BetResult.WIN ? (bettor.amount * 80) / 100 : -bettor.amount;
+
       this.eventEmitter.emit(
         futureEvent.BET_RESULT,
         new BetResultEvent({
-          amount: amount,
+          profit: profit,
           betResult: bettor.betResult,
           userId: bettor.userId,
+        }),
+      );
+
+      this.eventEmitter.emit(
+        orderEvent.RESOLVE_BET,
+        new ResolveBetOrderEvent({
+          status: bettor.betResult === BetResult.WIN ? OrderStatus.WON : OrderStatus.LOST,
+          profit: profit,
+          orderId: bettor.orderId,
+          userId: bettor.userId,
+          walletId: 'xxxx',
         }),
       );
     } catch (error) {

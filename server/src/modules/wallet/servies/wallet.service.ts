@@ -1,13 +1,21 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 import { WalletStatus } from 'src/modules/shared/constants/common.contant';
+import { walletEvent } from 'src/modules/shared/constants/event.constant';
+import SyncWalletToMemoryEvent from 'src/modules/shared/events/sync-wallet-to-memory-event';
 import { CurrentUser } from 'src/modules/shared/interfaces/common.interface';
+import { MemoryCacheService } from 'src/modules/shared/memory-cache/memory-cache.service';
 import { CreateWallet, LockWallet } from '../interfaces/wallet.interface';
 import TransactionRepository from '../repositories/transaction.repository';
 import WalletRepository from '../repositories/wallet.repository';
 
 @Injectable()
 export default class WalletService {
-  constructor(private transactionRepo: TransactionRepository, private walletRepo: WalletRepository) {}
+  constructor(
+    private transactionRepo: TransactionRepository,
+    private walletRepo: WalletRepository,
+    private cacheSvc: MemoryCacheService,
+  ) {}
 
   async createWallet(payload: CreateWallet) {
     const wallet = this.walletRepo.create({
@@ -41,5 +49,13 @@ export default class WalletService {
     } catch (error) {
       return new BadRequestException('Cannot lock the wallet');
     }
+  }
+
+  @OnEvent(walletEvent.SYNC_WALLET_TO_MEMORY)
+  async syncWalletToMemoryListener(payload: SyncWalletToMemoryEvent) {
+    const userId = payload.userId;
+    const wallet = await this.walletRepo.findOne({ userId: userId });
+    if (!wallet) return;
+    this.cacheSvc.setWallet(userId, wallet, 86400);
   }
 }

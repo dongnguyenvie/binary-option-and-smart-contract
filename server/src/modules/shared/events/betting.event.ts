@@ -2,7 +2,7 @@ import { BetResult } from '../constants/common.contant';
 
 export default class BetResultEvent {
   public userId: string;
-  public amount: number;
+  public profit: number;
   public betResult: BetResult;
 
   constructor(partial: Partial<BetResultEvent>) {
