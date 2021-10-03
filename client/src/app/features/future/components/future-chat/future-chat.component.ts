@@ -45,8 +45,8 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     let isScale = false;
     const chart = createChart(this.chart.nativeElement, {
-      width: 600,
-      height: 300,
+      width: 800,
+      height: 500,
       rightPriceScale: {
         scaleMargins: {
           top: 0.3,
