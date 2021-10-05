@@ -3,10 +3,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  HostListener,
+  Input,
+  OnChanges,
   OnInit,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { createChart, CrosshairMode, ISeriesApi } from 'lightweight-charts';
+import {
+  createChart,
+  CrosshairMode,
+  IChartApi,
+  ISeriesApi,
+} from 'lightweight-charts';
 import { Candle, DateChart } from './interface';
 import { map } from 'rxjs';
 import { DataFutureSocketService } from 'src/app/@core/services/data-future-socket.service';
@@ -27,6 +36,9 @@ import {
 export class FutureChatComponent implements OnInit, AfterViewInit {
   @ViewChild('chart')
   chart!: ElementRef;
+  widthBet = 400;
+  chartWidth: number = window.innerWidth - 52 - this.widthBet;
+  chartHeight: number = window.innerHeight - 80;
   currentBar: Candle;
   candleSeries: ISeriesApi<'Candlestick'>;
   volumeSeries: ISeriesApi<'Histogram'>;
@@ -38,7 +50,13 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
 
   currentBusinessDay = { day: 29, month: 5, year: 2019 };
   ticksInCurrentBar = 0;
-
+  chartTradingView: IChartApi;
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.chartWidth = window.innerWidth - 52 - this.widthBet;
+    this.chartHeight = window.innerHeight - 80;
+    this.chartTradingView.resize(this.chartWidth, this.chartHeight);
+  }
   constructor(
     private dataFutureSvc: DataFutureSocketService,
     private futureSvc: FutureSocketService,
@@ -55,12 +73,14 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {}
-
   ngAfterViewInit() {
+    this.initChart();
+  }
+  initChart() {
     let isScale = false;
-    const chart = createChart(this.chart.nativeElement, {
-      width: 800,
-      height: 500,
+    this.chartTradingView = createChart(this.chart.nativeElement, {
+      width: this.chartWidth,
+      height: this.chartHeight,
       rightPriceScale: {
         scaleMargins: {
           top: 0.3,
@@ -69,7 +89,7 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
         borderVisible: false,
       },
       layout: {
-        backgroundColor: '#131722',
+        backgroundColor: '#222b45',
         textColor: '#d1d4dc',
       },
       grid: {
@@ -81,9 +101,8 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
         },
       },
     });
-
-    this.candleSeries = chart.addCandlestickSeries();
-    this.volumeSeries = chart.addHistogramSeries({
+    this.candleSeries = this.chartTradingView.addCandlestickSeries();
+    this.volumeSeries = this.chartTradingView.addHistogramSeries({
       color: '#26a69a',
       priceFormat: {
         type: 'volume',
@@ -97,7 +116,6 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
       lastValueVisible: false,
       priceLineVisible: false,
     });
-
     this.dataFutureSvc.chart
       .pipe(
         map((candles: any) => {
@@ -111,7 +129,7 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
       .subscribe(data => {
         this.candleSeries.setData(data);
         if (!isScale) {
-          chart.timeScale().fitContent();
+          this.chartTradingView.timeScale().fitContent();
           isScale = true;
         }
       });

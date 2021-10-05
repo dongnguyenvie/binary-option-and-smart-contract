@@ -1,4 +1,38 @@
-<div>
-    <button (click)="order(betType.BUY)">Buy</button>
-    <button (click)="order(betType.SELL)">Sell</button>
+<div class="input-order">
+  <div class="button-group">
+    <button nbButton status="basic" outline (click)="updateAmount(false, 1)">
+      <nb-icon icon="minus-outline"></nb-icon>
+    </button>
+  </div>
+  <input type="text" appIsTypeNumber nbInput fullWidth status="basic" [value]="amount" />
+  <div class="button-group">
+    <button nbButton status="basic" outline (click)="updateAmount(true, 1)">
+      <nb-icon icon="plus-outline"></nb-icon>
+    </button>
+  </div>
+</div>
+<div class="action-bet">
+  <button
+    class="button-action"
+    nbButton
+    status="success"
+    (click)="order(betType.BUY)"
+    [disabled]="isOrder"
+  >
+    <nb-icon pack="eva" icon="trending-up-outline"></nb-icon>
+    <span> Buy </span>
+  </button>
+  <div class="time" [ngClass]="{ disabled: isOrder }">
+    {{ timer | async }}
+  </div>
+  <button
+    class="button-action"
+    nbButton
+    status="danger"
+    (click)="order(betType.SELL)"
+    [disabled]="isOrder"
+  >
+    <nb-icon pack="eva" icon="trending-down-outline"></nb-icon>
+    <span> Sell </span>
+  </button>
 </div>

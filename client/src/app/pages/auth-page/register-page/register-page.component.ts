@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NbToastrService, NbComponentStatus } from '@nebular/theme';
 import { Observable } from 'rxjs';
 import { AccountService } from 'src/app/@core/services/account.service';
@@ -20,6 +20,7 @@ export class RegisterPageComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private route: ActivatedRoute,
     private accountService: AccountService,
   ) {}
   ngOnChanges() {}
@@ -41,11 +42,21 @@ export class RegisterPageComponent implements OnInit {
   register() {
     if (this.registerForm.valid && !this.submitted) {
       this.submitted = true;
-      this.isShowError = false;
+      this.message = '';
       const email: string = this.registerForm.get('email')!.value.toLowerCase();
       const password: string = this.registerForm.get('password')!.value;
       this.accountService.register(email, password).subscribe(result => {
-        console.log(result);
+        const { error, message } = result;
+        if (error || message) {
+          this.message = error?.message || message;
+        } else {
+          if (result) {
+            this.router.navigate(['/auth/login'], {
+              relativeTo: this.route,
+            });
+            return;
+          }
+        }
         this.submitted = false;
       });
     }

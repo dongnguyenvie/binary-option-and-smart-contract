@@ -49,19 +49,19 @@ export class LoginPageComponent implements OnInit {
       const password: string = this.loginForm.get('password')!.value;
       this.accountService.login(email, password).subscribe(result => {
         console.log(result);
-        const { error } = result;
-        if (error) {
-          this.message = error.message;
+        const { error, message } = result;
+        if (error || message) {
+          this.message = error?.message || message;
         } else {
           if (result && result.accessToken) {
             this.accountService.setToken(result.accessToken);
             this.router.navigate(['/pages/future'], {
               relativeTo: this.route,
             });
+            this.message = '';
             return;
           }
         }
-        this.message = '';
         this.submitted = false;
       });
     }

@@ -1,12 +1,7 @@
 <div class="row">
   <div class="col-sm-12">
-    <nb-alert
-      *ngIf="isShowError"
-      accent="warning"
-      closable
-      (close)="closeAlert()"
-    >
-      <p style="font-size: 1.2rem; line-height: 1.6" *ngIf="message">
+    <nb-alert *ngIf="message" accent="warning" closable (close)="closeAlert()">
+      <p style="font-size: 1.2rem; line-height: 1.6">
         {{ message }}
       </p>
     </nb-alert>

@@ -1,22 +1,30 @@
-<div class="p-2" style="height: 300px; overflow-y: scroll; overflow-x: hidden;background:#272c31">
-    <div class="row flex-column" *ngFor="let bettor of bettors">
-        <div class="col row">
-            <div class="col text-danger">
-                BTCUSDT
-            </div>
-            <div class="col">
-                {{bettor.username}}
-            </div>
-            <div class="col"
-                [ngClass]="{'text-danger': betType.SELL === bettor.betType, 'text-success': betType.BUY === bettor.betType}">
-                {{bettor.amount}}
-            </div>
-            <div class="col">
-                {{bettor.amount}}
-            </div>
-            <div class="col">
-                539
-            </div>
-        </div>
-    </div>
-</div>
+<nb-card class="card-bettor">
+  <nb-card-header>
+    <ul>
+      <li>Coin</li>
+      <li>User</li>
+      <li class="text-right">Type/Amount</li>
+      <li class="text-right">Time</li>
+    </ul>
+  </nb-card-header>
+  <nb-card-body>
+    <nb-list>
+      <nb-list-item class="item" *ngFor="let bettor of bettors">
+        <span>BTC/USDT</span>
+        <span> {{ bettor.username }}</span>
+        <span
+          class="delta"
+          [class.up]="betType.BUY === bettor.betType"
+          [class.down]="betType.SELL === bettor.betType"
+        >
+          <nb-icon
+            [icon]="betType.BUY ? 'arrow-up' : 'arrow-down'"
+            pack="eva"
+          ></nb-icon>
+          {{ bettor?.amount || 0 }}
+        </span>
+        <span class="text-right"> 539</span>
+      </nb-list-item>
+    </nb-list>
+  </nb-card-body>
+</nb-card>

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DataFutureSocketService } from 'src/app/@core/services/data-future-socket.service';
 import { FutureSocketService } from 'src/app/@core/services/future-socket.service';
 import { BetType } from '../../future-bet.enum';
@@ -12,6 +12,7 @@ export class FutureMonitorComponent implements OnInit, AfterViewInit {
   constructor(
     private futureSocketSvc: FutureSocketService,
     private dataFutureSocketSvc: DataFutureSocketService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   bettors: any[] = [];
@@ -23,10 +24,11 @@ export class FutureMonitorComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.dataFutureSocketSvc.socket.on('datafuture:orders', bettor => {
-      if (this.bettors.length > 40) {
+      if (this.bettors.length > 15) {
         this.bettors.shift();
       }
       this.bettors.push(bettor);
+      this.cdr.markForCheck();
     });
   }
 

@@ -1,0 +1,64 @@
+@import '../../../../@theme/styles/themes';
+
+@include nb-install-component() {
+  overflow: auto;
+  nb-list-item {
+    width: 100%;
+  }
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    > * {
+      flex: 1;
+    }
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+  .card-bettor {
+    height: calc(100vh - 210px);
+    margin-bottom: 6px;
+    border-radius: 0;
+    border: none;
+    nb-card-header {
+      padding-left: 15px;
+      padding-right: 15px;
+      ul {
+        display: flex;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+        li {
+          flex: 1;
+          display: block;
+        }
+      }
+    }
+    nb-card-body{
+      padding: 0;
+    }
+  }
+  .delta {
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: flex-end;
+    &.down {
+      color: nb-theme(color-danger-default);
+    }
+
+    &.up {
+      color: nb-theme(color-success-default);
+    }
+    nb-icon ::ng-deep svg {
+      vertical-align: top;
+    }
+  }
+  .text-right{
+    text-align: right;
+  }
+}
