@@ -3,12 +3,14 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
 import { API } from '../config/api';
 import jwtDecode from 'jwt-decode';
+import { Profile } from '../interfaces/common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
   private _token = '';
+  private _profile: Profile;
   private $currentUserLogin = new BehaviorSubject<any>(null);
   constructor(private http: HttpClient) {
     const token = localStorage.getItem('token');
@@ -60,6 +62,30 @@ export class AccountService {
       );
   }
 
+  async refreshProfile() {
+    try {
+      this.http
+        .get(API.PROFILE, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .pipe(
+          catchError(error => {
+            return of(error);
+          }),
+        )
+        .subscribe(result => {
+          this._profile = result;
+          console.log('result', result);
+        });
+    } catch (error) {}
+  }
+
+  get profile() {
+    return this._profile;
+  }
+
   getToken(): string {
     return this._token;
   }
@@ -72,6 +98,9 @@ export class AccountService {
   setToken(token: string) {
     localStorage.setItem('token', token);
     this._token = token;
+    setTimeout(() => {
+      this.refreshProfile();
+    }, 300);
   }
 
   logout() {

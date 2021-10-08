@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="row">
+        <div *ngIf="profile && profile.wallet" class="col-12">
+            <div class="row">
+                <div class="col-6">
+                    Balance
+                </div>
+                <div class="col-6">
+                    {{profile.wallet?.balance}}
+                </div>
+                <div class="col-6">
+                    Addresss
+                </div>
+                <div class="col-6">
+                    {{profile.wallet?.address}}
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            xxxx
+        </div>
+    </div>
+</div>

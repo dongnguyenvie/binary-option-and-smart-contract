@@ -4,20 +4,13 @@ import {
   Component,
   ElementRef,
   HostListener,
-  Input,
-  OnChanges,
+  OnDestroy,
   OnInit,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {
-  createChart,
-  CrosshairMode,
-  IChartApi,
-  ISeriesApi,
-} from 'lightweight-charts';
+import { createChart, IChartApi, ISeriesApi } from 'lightweight-charts';
 import { Candle, DateChart } from './interface';
-import { map } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { DataFutureSocketService } from 'src/app/@core/services/data-future-socket.service';
 import { FutureSocketService } from 'src/app/@core/services/future-socket.service';
 import { checkCandleDisable } from './utils/future-chat.util';
@@ -33,7 +26,7 @@ import {
   styleUrls: ['./future-chat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FutureChatComponent implements OnInit, AfterViewInit {
+export class FutureChatComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('chart')
   chart!: ElementRef;
   widthBet = 400;
@@ -47,6 +40,9 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
   lastIndex: number;
 
   targetPrice = this.getRandomPrice();
+
+  $topSeries: Subscription;
+  $bottomseries: Subscription;
 
   currentBusinessDay = { day: 29, month: 5, year: 2019 };
   ticksInCurrentBar = 0;
@@ -73,9 +69,16 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {}
+
   ngAfterViewInit() {
     this.initChart();
   }
+
+  ngOnDestroy(): void {
+    this.$topSeries.unsubscribe();
+    this.$bottomseries.unsubscribe();
+  }
+
   initChart() {
     let isScale = false;
     this.chartTradingView = createChart(this.chart.nativeElement, {
@@ -116,7 +119,8 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
       lastValueVisible: false,
       priceLineVisible: false,
     });
-    this.dataFutureSvc.chart
+
+    this.$topSeries = this.dataFutureSvc.chart
       .pipe(
         map((candles: any) => {
           return candles.map((candle: any) => {
@@ -134,7 +138,7 @@ export class FutureChatComponent implements OnInit, AfterViewInit {
         }
       });
 
-    this.dataFutureSvc.chart
+    this.$bottomseries = this.dataFutureSvc.chart
       .pipe(
         map((candles: any) => {
           return candles.map((candle: any) => {

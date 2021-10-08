@@ -1,5 +1,9 @@
 # CoinTradingAngular
-
+```
+npx -p @angular/cli ng g m features/profile
+npx -p @angular/cli ng g c features/profile/component/profile-wallet
+npx -p @angular/cli ng g c features/profile/component/profile-information
+```
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.3.
 
 ## Development server

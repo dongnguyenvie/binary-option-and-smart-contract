@@ -14,7 +14,7 @@ export class FutureBetComponent implements OnInit {
   timer = timer(0, 1000).pipe(
     map(() => {
       const second = (Date.now() / 1000) % 60;
-      this.isOrder = Math.floor((Date.now() / 1000 / 60) % 60) % 2 === 0;
+      this.isOrder = Math.floor((Date.now() / 1000 / 60) % 60) % 2 === 1;
       return Math.max(59 - Math.floor(second), 0);
     }),
   );

@@ -27,6 +27,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   $isMetamaskInstall = this.walletConnectService.isMetamaskInstall;
   $accountSelected = this.walletConnectService.accountSelected;
   $balance: Observable<any> = this.walletConnectService.balanceAccountSelected;
+
   constructor(
     private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
