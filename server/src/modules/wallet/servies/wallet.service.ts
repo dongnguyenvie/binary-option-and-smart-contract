@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { OnEvent } from '@nestjs/event-emitter';
 import { WalletStatus } from 'src/modules/shared/constants/common.contant';
 import { walletEvent } from 'src/modules/shared/constants/event.constant';
+import CreateWalletEvent from 'src/modules/shared/events/create-wallet.event';
 import SyncWalletToMemoryEvent from 'src/modules/shared/events/sync-wallet-to-memory-event';
 import { CurrentUser } from 'src/modules/shared/interfaces/common.interface';
 import { MemoryCacheService } from 'src/modules/shared/memory-cache/memory-cache.service';
@@ -55,7 +56,16 @@ export default class WalletService {
   async syncWalletToMemoryListener(payload: SyncWalletToMemoryEvent) {
     const userId = payload.userId;
     const wallet = await this.walletRepo.findOne({ userId: userId });
+    console.log('wallet', wallet);
     if (!wallet) return;
     this.cacheSvc.setWallet(userId, wallet, 86400);
+  }
+
+  @OnEvent(walletEvent.CREATE_WALLET)
+  async createWalletListener(payload: CreateWalletEvent) {
+    const userId = payload.userId;
+    const wallet = await this.walletRepo.findOne({ userId: userId });
+    if (!!wallet) return;
+    this.createWallet({ userId: userId });
   }
 }

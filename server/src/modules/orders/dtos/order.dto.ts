@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsIn, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { BetType } from 'src/modules/shared/constants/common.contant';
 
 export default class OrderStatusDto {
   @ApiProperty()
@@ -10,6 +11,7 @@ export default class OrderStatusDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
+  @IsIn([BetType.BUY, BetType.SELL])
   betType: number;
 
   // @ApiProperty()

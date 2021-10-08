@@ -22,6 +22,6 @@ export default class AuthController {
   @PoliciesGuard()
   @Get('profile')
   getProfile(@Request() req) {
-    return req.user;
+    return this.authSvc.getProfile(req.user);
   }
 }

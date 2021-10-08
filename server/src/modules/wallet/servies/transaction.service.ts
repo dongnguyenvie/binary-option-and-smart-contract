@@ -66,8 +66,8 @@ export default class TransactionService {
     const transaction = this.transactionRepo.create({
       userId: payload.userId,
       walletId: payload.walletId,
-      credit: payload.credit,
-      debit: payload.debit,
+      credit: payload.credit || 0,
+      debit: payload.debit || 0,
       description: payload.description,
       status: TransactionStatus.PROCESSING,
       ...(payload.profit > 0 ? { credit: payload.profit } : { debit: Math.abs(payload.debit) }),

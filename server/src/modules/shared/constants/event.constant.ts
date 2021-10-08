@@ -4,6 +4,7 @@ export const transactionEvent = {
 
 export const walletEvent = {
   SYNC_WALLET_TO_MEMORY: 'wallet.SYNC_WALLET_TO_MEMORY',
+  CREATE_WALLET: 'wallet.CREATE_WALLET',
 };
 
 export const futureEvent = {

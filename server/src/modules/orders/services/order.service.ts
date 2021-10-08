@@ -32,6 +32,7 @@ export default class OrderService {
     }
 
     const wallet = await this.cacheSvc.getWallet(payload.userId);
+    console.log('wallet', wallet);
     if (payload.amount < 0 || payload.amount - wallet.balance > 0) {
       return new BadRequestException('out of money');
     }

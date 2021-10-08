@@ -7,6 +7,9 @@ import { saltOrRounds } from 'src/modules/shared/constants/system.constant';
 import { EventEmitter2 } from 'eventemitter2';
 import SyncWalletToMemoryEvent from 'src/modules/shared/events/sync-wallet-to-memory-event';
 import { walletEvent } from 'src/modules/shared/constants/event.constant';
+import CreateWalletEvent from 'src/modules/shared/events/create-wallet.event';
+import WalletService from 'src/modules/wallet/servies/wallet.service';
+import WalletEntity from 'src/modules/wallet/entities/wallets.entity';
 
 @Injectable()
 export default class AuthService {
@@ -14,7 +17,13 @@ export default class AuthService {
     private userSvc: UserService,
     private jwtSvc: JwtService,
     private eventEmitter: EventEmitter2,
+    private walletSvc: WalletService,
   ) {}
+
+  async getProfile(user: any) {
+    const wallet = (await this.walletSvc.myWallet(user)) || ({} as WalletEntity);
+    return Object.assign({}, user, { wallet });
+  }
 
   async validateUser(email: string, password: string): Promise<any> {
     const userLogon = await this.userSvc.findOneByEmail(email);
@@ -55,6 +64,13 @@ export default class AuthService {
     user.password = await bcrypt.hash(user.password, saltOrRounds);
     const result = await this.userSvc.createUser(user);
     const { accessToken } = await this.createToken(result);
+
+    this.eventEmitter.emit(
+      walletEvent.CREATE_WALLET,
+      new CreateWalletEvent({
+        userId: result.id,
+      }),
+    );
 
     return {
       accessToken,

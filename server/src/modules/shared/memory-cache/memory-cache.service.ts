@@ -3,7 +3,7 @@ import { Cache } from 'cache-manager';
 import WalletEntity from 'src/modules/wallet/entities/wallets.entity';
 import { getOption } from './memory-cache.util';
 
-const USER_WALLET = 'user:';
+const BETTOR_WALLET = 'BETTOR:';
 
 @Injectable()
 export class MemoryCacheService {
@@ -33,12 +33,12 @@ export class MemoryCacheService {
   }
 
   async getWallet(key, defaultValue = undefined): Promise<WalletEntity> {
-    const k = USER_WALLET + key;
+    const k = BETTOR_WALLET + key;
     return this.get(k, defaultValue);
   }
 
   async setWallet(key, value, ttl: number = undefined) {
-    const k = USER_WALLET + key;
+    const k = BETTOR_WALLET + key;
     return this.set(k, value, ttl);
   }
 }
