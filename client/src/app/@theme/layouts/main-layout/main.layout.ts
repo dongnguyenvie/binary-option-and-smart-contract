@@ -9,7 +9,7 @@ import { MENU_ITEMS } from 'src/app/pages/pages-menu';
   selector: 'main-layout',
   styleUrls: ['./main.layout.scss'],
   template: `
-    <nb-layout windowMode [ngClass]="{ trade: isFuturePage }">
+    <nb-layout class="main-layout" windowMode [ngClass]="{ trade: isFuturePage }">
       <nb-layout-header fixed>
         <app-header></app-header>
       </nb-layout-header>
@@ -40,7 +40,9 @@ export class MainLayoutComponent {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(event => {
-        this.isFuturePage = (event as NavigationEnd).url === MENU_ITEMS[0].link || (event as NavigationEnd).urlAfterRedirects === MENU_ITEMS[0].link;
+        this.isFuturePage =
+          (event as NavigationEnd).url === MENU_ITEMS[0].link ||
+          (event as NavigationEnd).urlAfterRedirects === MENU_ITEMS[0].link;
         if (this.isFuturePage) {
           setTimeout(() => {
             this.sidebarService.compact('menu-sidebar');

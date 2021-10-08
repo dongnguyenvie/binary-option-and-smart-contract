@@ -9,4 +9,18 @@
   .menu-sidebar {
     z-index: 999;
   }
+  .trade {
+    ::ng-deep nb-layout-column {
+      padding: 4px 0 4px 4px!important;
+    }
+  }
+  .main-layout{
+    ::ng-deep nb-layout-header nav {
+      box-shadow: none;
+    }
+    ::ng-deep nb-sidebar {
+      box-shadow: none;
+      border-top: 4px solid #151a30;
+    }
+  }
 }

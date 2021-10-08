@@ -83,11 +83,8 @@ export class FutureSocketService {
   }
 
   disconnect() {
-    return new Promise(resolve => {
-      if (this.isReady) {
-        this._socket.disconnect();
-        resolve(true);
-      }
-    });
+    if (this.isReady && this._socket) {
+      this._socket.disconnect();
+    }
   }
 }

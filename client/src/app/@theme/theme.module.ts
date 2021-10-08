@@ -19,6 +19,7 @@ import { DARK_THEME } from './styles/theme.dark';
 import { HeaderComponent } from './components/header/header.component';
 import { MainLayoutComponent } from './layouts/main-layout/main.layout';
 import { LayoutService } from './utils/layout.service';
+import { FormatAddressPipe } from './pipes/formatAddress.pipe';
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -33,7 +34,7 @@ const NB_MODULES = [
   NbIconModule,
   NbEvaIconsModule,
 ];
-const COMPONENTS = [HeaderComponent, MainLayoutComponent];
+const COMPONENTS = [HeaderComponent, MainLayoutComponent, FormatAddressPipe];
 
 @NgModule({
   imports: [CommonModule, ...NB_MODULES],

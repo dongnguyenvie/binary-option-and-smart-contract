@@ -35,7 +35,10 @@
               "node_modules/pace-js/templates/pace-theme-flash.tmpl.css",
               "src/app/@theme/styles/styles.scss"
             ],
-            "scripts": ["node_modules/pace-js/pace.min.js"]
+            "scripts": ["node_modules/pace-js/pace.min.js"],
+            "allowedCommonJsDependencies": [
+              "web3"
+            ]
           },
           "configurations": {
             "production": {

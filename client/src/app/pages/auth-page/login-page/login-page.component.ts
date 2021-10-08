@@ -55,6 +55,7 @@ export class LoginPageComponent implements OnInit {
         } else {
           if (result && result.accessToken) {
             this.accountService.setToken(result.accessToken);
+            this.accountService.setUserByToken(result.accessToken);
             this.router.navigate(['/pages/future'], {
               relativeTo: this.route,
             });

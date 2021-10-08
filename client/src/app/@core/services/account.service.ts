@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, of } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
 import { API } from '../config/api';
 import jwtDecode from 'jwt-decode';
 
@@ -8,21 +8,26 @@ import jwtDecode from 'jwt-decode';
   providedIn: 'root',
 })
 export class AccountService {
-  _token = '';
+  private _token = '';
+  private $currentUserLogin = new BehaviorSubject<any>(null);
   constructor(private http: HttpClient) {
     const token = localStorage.getItem('token');
     if (!!token) {
       this._token = token;
+      this.setUserByToken(token);
     }
   }
 
-  get user() {
+  setUserByToken(token: string) {
+    let user;
     try {
-      console.log(jwtDecode(this._token));
-      return jwtDecode(this._token);
-    } catch (Error) {
-      return null;
-    }
+      user = jwtDecode(token || this._token);
+    } catch (Error) {}
+    this.$currentUserLogin.next(user);
+  }
+
+  getUser() {
+    return this.$currentUserLogin.asObservable();
   }
 
   get token() {
@@ -69,5 +74,8 @@ export class AccountService {
     this._token = token;
   }
 
-  logout() {}
+  logout() {
+    localStorage.clear();
+    this.$currentUserLogin.next(null);
+  }
 }
