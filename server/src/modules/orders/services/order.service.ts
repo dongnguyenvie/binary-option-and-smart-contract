@@ -3,9 +3,11 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { EventEmitter2 } from 'eventemitter2';
 import { BettingStateService } from 'src/modules/shared/betting-state/betting-state.service';
 import { OrderStatus } from 'src/modules/shared/constants/common.contant';
-import { orderEvent, transactionEvent } from 'src/modules/shared/constants/event.constant';
+import { futureEvent, orderEvent, transactionEvent } from 'src/modules/shared/constants/event.constant';
+import PublicOrderEvent from 'src/modules/shared/events/public-order.event';
 import ResolveBetOrderEvent from 'src/modules/shared/events/resolve-bet-order.event';
 import dayjs from 'src/modules/shared/helpers/dayjs';
+import { CurrentUser } from 'src/modules/shared/interfaces/common.interface';
 import { MemoryCacheService } from 'src/modules/shared/memory-cache/memory-cache.service';
 import { ORDER_DURATION } from '../constants/order.constant';
 import { CreateOrder, CreateOrderTransaction, UpdateOrder } from '../interfaces/order.interface';
@@ -21,24 +23,24 @@ export default class OrderService {
   ) {}
 
   emitCreateNewOrder(order: CreateOrderTransaction) {
-    this.eventEmitter.emit(transactionEvent.CREATE_BET_TRANSACTION, order);
+    // this.eventEmitter.emit(transactionEvent.CREATE_BET_TRANSACTION, order);
   }
 
-  async createOrder(payload: CreateOrder) {
+  async createOrder(payload: CreateOrder, user: CurrentUser) {
     const orderTime = dayjs().startOf('minute').unix();
     const canOrder = isCanOrder(orderTime);
     if (!canOrder) {
       return new BadRequestException('Cannot order');
     }
 
-    const wallet = await this.cacheSvc.getWallet(payload.userId);
+    const wallet = await this.cacheSvc.getWallet(user.id);
     console.log('wallet', wallet);
     if (payload.amount < 0 || payload.amount - wallet.balance > 0) {
       return new BadRequestException('out of money');
     }
 
     const openTime = orderTime + 60;
-    const { amount, betType, asset, userId } = payload;
+    const { amount, betType, asset } = payload;
 
     const newOrder = this.orderRepo.create({
       amount,
@@ -46,10 +48,19 @@ export default class OrderService {
       openTime,
       status: OrderStatus.WAITING,
       duration: ORDER_DURATION,
-      userId: userId,
+      userId: user.id,
       asset: asset,
     });
     const result = await this.orderRepo.save(newOrder);
+
+    this.eventEmitter.emit(
+      futureEvent.PUBLIC_ORDER,
+      new PublicOrderEvent({
+        username: user.email,
+        amount: amount,
+        betType: betType,
+      }),
+    );
 
     this.bettingStateSvc.set(result.id, {
       betType: result.betType,

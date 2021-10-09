@@ -10,7 +10,7 @@ export interface CreateOrderTransaction {
 }
 
 export interface CreateOrder {
-  userId: string;
+  // userId: string;
   betType: BetType;
   amount: number;
   asset: string;

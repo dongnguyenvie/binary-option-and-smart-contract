@@ -9,6 +9,7 @@ export const walletEvent = {
 
 export const futureEvent = {
   BET_RESULT: 'future.BET_RESULT',
+  PUBLIC_ORDER: 'future.PUBLIC_ORDER',
 };
 
 export const orderEvent = {

@@ -40,7 +40,7 @@ export default class AuthService {
   }
 
   async createToken(user: any) {
-    const payload = { email: user.email, sub: user.id };
+    const payload = { email: user.email, sub: user.id, id: user.id };
     return {
       accessToken: this.jwtSvc.sign(payload),
     };

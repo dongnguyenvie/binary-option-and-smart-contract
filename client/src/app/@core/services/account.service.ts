@@ -38,7 +38,7 @@ export class AccountService {
 
   login(email: string, password: string): Observable<any> {
     return this.http
-      .post(API.LOGIN, {
+      .post(API.login, {
         email,
         password,
       })
@@ -51,7 +51,7 @@ export class AccountService {
 
   register(email: string, password: string): Observable<any> {
     return this.http
-      .post(API.REGISTER, {
+      .post(API.register, {
         email,
         password,
       })
@@ -62,24 +62,24 @@ export class AccountService {
       );
   }
 
+  fetchProfile() {
+    return this.http
+      .get(API.profile, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+      .pipe(
+        catchError(error => {
+          return of(error);
+        }),
+      );
+  }
+
   async refreshProfile() {
-    try {
-      this.http
-        .get(API.PROFILE, {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
-        .pipe(
-          catchError(error => {
-            return of(error);
-          }),
-        )
-        .subscribe(result => {
-          this._profile = result;
-          console.log('result', result);
-        });
-    } catch (error) {}
+    this.fetchProfile().subscribe(result => {
+      this._profile = result;
+    });
   }
 
   get profile() {

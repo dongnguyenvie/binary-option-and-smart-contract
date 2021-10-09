@@ -2,15 +2,17 @@ import { OnQueueActive, OnQueueCompleted, OnQueueFailed, Process, Processor } fr
 import { Job } from 'bull';
 import { EventEmitter2 } from 'eventemitter2';
 import { BetResult, OrderStatus } from 'src/modules/shared/constants/common.contant';
-import { futureEvent, orderEvent } from 'src/modules/shared/constants/event.constant';
+import { futureEvent, orderEvent, transactionEvent } from 'src/modules/shared/constants/event.constant';
 import BetResultEvent from 'src/modules/shared/events/betting.event';
+import CreateBetTransactionEvent from 'src/modules/shared/events/create-bet-transaction.event';
 import ResolveBetOrderEvent from 'src/modules/shared/events/resolve-bet-order.event';
 import BetCalculateJob from 'src/modules/shared/jobs/bet-caculate.job';
+import { MemoryCacheService } from 'src/modules/shared/memory-cache/memory-cache.service';
 import { BET_CALCULATOR, CALCULATE_BET } from '../constants/future.constant';
 
 @Processor(BET_CALCULATOR)
 export default class BetProcessor {
-  constructor(private eventEmitter: EventEmitter2) {}
+  constructor(private eventEmitter: EventEmitter2, private memorycacheSvc: MemoryCacheService) {}
 
   // @OnQueueActive()
   // onActive(job: Job) {
@@ -59,6 +61,21 @@ export default class BetProcessor {
           orderId: bettor.orderId,
           userId: bettor.userId,
           walletId: 'xxxx',
+        }),
+      );
+
+      const wallet = await this.memorycacheSvc.getWallet(bettor.userId);
+      wallet.balance = wallet.balance + +profit;
+
+      this.memorycacheSvc.setWallet(bettor.userId, wallet);
+
+      this.eventEmitter.emit(
+        transactionEvent.CREATE_BET_TRANSACTION,
+        new CreateBetTransactionEvent({
+          profit: profit,
+          orderId: bettor.orderId,
+          walletId: wallet.id,
+          userId: bettor.userId,
         }),
       );
     } catch (error) {

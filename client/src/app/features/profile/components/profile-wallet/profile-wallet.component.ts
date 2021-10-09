@@ -11,11 +11,15 @@ export class ProfileWalletComponent implements OnInit {
 
   constructor(private accountService: AccountService) {}
 
+  ngOnInit(): void {
+    this.accountService.refreshProfile();
+  }
+
   get isWalletCreated() {
     return this.profile && !!this.profile.wallet;
   }
 
-  createWallet() {}
-
-  ngOnInit(): void {}
+  createWallet() {
+    alert('create wallet');
+  }
 }

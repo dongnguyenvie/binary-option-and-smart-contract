@@ -2,7 +2,8 @@ import { environment } from 'src/environments/environment';
 
 const BACKEND_URL = environment.apiUrl + '/api';
 export const API = {
-  LOGIN: `${BACKEND_URL}/signin`,
-  REGISTER: `${BACKEND_URL}/signup`,
-  PROFILE: `${BACKEND_URL}/profile`,
+  login: `${BACKEND_URL}/signin`,
+  register: `${BACKEND_URL}/signup`,
+  profile: `${BACKEND_URL}/profile`,
+  order: `${BACKEND_URL}/orders`,
 };

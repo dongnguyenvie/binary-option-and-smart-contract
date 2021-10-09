@@ -23,6 +23,7 @@ export default class TransactionSubscriber implements EntitySubscriberInterface<
 
   async afterInsert(event: InsertEvent<TransactionEntity>) {
     const transaction = event.entity;
+    console.log('transaction:', transaction);
     this.connection.transaction(async (manager) => {
       const wallet = await this.walletRepo.findOne(
         {
@@ -36,6 +37,7 @@ export default class TransactionSubscriber implements EntitySubscriberInterface<
       this.walletRepo.merge(wallet, {
         balance: +wallet.balance + +transaction.credit - transaction.debit,
       });
+      console.log(222, +wallet.balance + +transaction.credit - transaction.debit);
       this.transactionRepo.merge(transaction, {
         status: TransactionStatus.FINISHED,
       });

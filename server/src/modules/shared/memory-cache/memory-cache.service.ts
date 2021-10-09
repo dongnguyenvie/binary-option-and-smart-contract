@@ -32,13 +32,13 @@ export class MemoryCacheService {
     }
   }
 
-  async getWallet(key, defaultValue = undefined): Promise<WalletEntity> {
-    const k = BETTOR_WALLET + key;
+  async getWallet(userId, defaultValue = undefined): Promise<WalletEntity> {
+    const k = BETTOR_WALLET + userId;
     return this.get(k, defaultValue);
   }
 
-  async setWallet(key, value, ttl: number = undefined) {
-    const k = BETTOR_WALLET + key;
+  async setWallet(userId, value, ttl: number = undefined) {
+    const k = BETTOR_WALLET + userId;
     return this.set(k, value, ttl);
   }
 }

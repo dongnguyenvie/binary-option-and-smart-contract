@@ -11,15 +11,24 @@ import {
   NbListModule,
 } from '@nebular/theme';
 import { IsTypeNumberDirective } from './directives/isTypeNumber.directive';
-
+import { FutureOrderService } from './future-order.service';
+import { FormsModule } from '@angular/forms';
+import { FutureAnnunciationComponent } from './components/future-annunciation/future-annunciation.component';
 @NgModule({
   declarations: [
     FutureChatComponent,
     FutureBetComponent,
     FutureMonitorComponent,
-    IsTypeNumberDirective
+    FutureAnnunciationComponent,
+    IsTypeNumberDirective,
   ],
-  exports: [FutureChatComponent, FutureBetComponent, FutureMonitorComponent],
+  exports: [
+    FutureChatComponent,
+    FutureBetComponent,
+    FutureMonitorComponent,
+    FutureAnnunciationComponent,
+  ],
+  providers: [FutureOrderService],
   imports: [
     CommonModule,
     NbButtonModule,
@@ -27,6 +36,7 @@ import { IsTypeNumberDirective } from './directives/isTypeNumber.directive';
     NbListModule,
     NbIconModule,
     NbCardModule,
+    FormsModule,
   ],
 })
 export class FutureModule {}

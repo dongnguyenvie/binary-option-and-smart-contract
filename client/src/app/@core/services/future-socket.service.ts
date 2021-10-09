@@ -13,19 +13,11 @@ export class FutureSocketService {
   private _isSubscriber: any;
   private _socket!: Socket;
 
-  private _chartSubject = new Subject<{
-    tick: any;
-    listenerGuid: string;
-  }>();
-
   private _socketSubject = new Subject<void>();
+  public $betResultSubject = new Subject<void>();
 
   get socket() {
     return this._socketSubject;
-  }
-
-  get chart() {
-    return this._chartSubject;
   }
 
   get isReady() {
@@ -70,7 +62,7 @@ export class FutureSocketService {
     });
 
     this._socket.on('future:bet-results', payload => {
-      console.info('my result', payload);
+      this.$betResultSubject.next(payload);
     });
   }
 

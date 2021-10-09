@@ -6,10 +6,11 @@ import TransactionRepository from './repositories/transaction.repository';
 import WalletRepository from './repositories/wallet.repository';
 import TransactionService from './servies/transaction.service';
 import WalletService from './servies/wallet.service';
+import TransactionSubscriber from './subscribers/transaction.subscriber';
 
 @Module({
   imports: [TypeOrmModule.forFeature([WalletRepository, TransactionRepository]), SharedModule],
-  providers: [TransactionService, WalletService],
+  providers: [TransactionSubscriber, TransactionService, WalletService],
   controllers: [WalletController],
   exports: [TransactionService, WalletService],
 })

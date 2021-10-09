@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { BetType, OrderStatus } from 'src/modules/shared/constants/common.contant';
 import CurrentUser from 'src/modules/shared/decorators/user.decorator';
 import PoliciesGuard from 'src/modules/shared/guards/policies.guard';
+import { CurrentUser as ICurrentUser } from 'src/modules/shared/interfaces/common.interface';
 import OrderStatusDto from '../dtos/order.dto';
 import OrderService from '../services/order.service';
 
@@ -22,11 +23,8 @@ export default class OrderController {
   }
 
   @PoliciesGuard()
-  @Post('/create')
-  async createOrder(@Body() orderDto: OrderStatusDto, @CurrentUser() user: any) {
-    return this.orderService.createOrder({
-      ...orderDto,
-      userId: user.id,
-    });
+  @Post()
+  async createOrder(@Body() orderDto: OrderStatusDto, @CurrentUser() user: ICurrentUser) {
+    return this.orderService.createOrder(orderDto, user);
   }
 }

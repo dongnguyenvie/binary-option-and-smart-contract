@@ -19,6 +19,8 @@ import {
   DISABLE_CANDLE,
   SELL_CANDLE,
 } from './constants/future-chat.constant';
+import { AccountService } from 'src/app/@core/services/account.service';
+import { ToastService } from 'src/app/@core/services/toastr.service';
 
 @Component({
   selector: 'app-future-chat',
@@ -56,6 +58,7 @@ export class FutureChatComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private dataFutureSvc: DataFutureSocketService,
     private futureSvc: FutureSocketService,
+    private accountSvc: AccountService,
   ) {
     this.currentBar = {
       open: 0,
@@ -65,7 +68,10 @@ export class FutureChatComponent implements OnInit, AfterViewInit, OnDestroy {
       time: this.currentBusinessDay,
     };
     this.dataFutureSvc.connectSocket();
-    this.futureSvc.connectSocket('tokenxxxxxxx');
+    this.accountSvc.getUser().subscribe(user => {
+      if (!user) return;
+      this.futureSvc.connectSocket(this.accountSvc.token);
+    });
   }
 
   ngOnInit(): void {}

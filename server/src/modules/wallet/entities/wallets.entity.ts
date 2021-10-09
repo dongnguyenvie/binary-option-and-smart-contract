@@ -43,8 +43,8 @@ export default class WalletEntity extends AbstractEntity {
   })
   transactions: TransactionEntity[];
 
-  @RelationId((wallet: WalletEntity) => wallet.transactions)
-  transactionIds: string[];
+  // @RelationId((wallet: WalletEntity) => wallet.transactions)
+  // transactionIds: string[];
 
   constructor(partial: Partial<WalletEntity>) {
     super();

@@ -10,6 +10,7 @@ import dayjs from 'src/modules/shared/helpers/dayjs';
 import { Bettor } from 'src/modules/shared/interfaces/common.interface';
 import BetCalculateJob from 'src/modules/shared/jobs/bet-caculate.job';
 import { BET_CALCULATOR, CALCULATE_BET } from '../constants/future.constant';
+import { isCanCalculateBetting } from '../utils/future.util';
 
 @Injectable()
 export default class FutureService implements OnModuleInit {
@@ -44,7 +45,7 @@ export default class FutureService implements OnModuleInit {
       if (!bettors.length) {
         return;
       }
-      console.log('calcualte bet');
+
       bettors.forEach((bettor) => {
         const job = new BetCalculateJob({
           ...bettor,
@@ -57,10 +58,4 @@ export default class FutureService implements OnModuleInit {
       this.bettingStateSvc.reset();
     });
   }
-}
-
-function isCanCalculateBetting(time: number) {
-  const nextCandleTime = dayjs().startOf('minute').unix() * 1000;
-
-  return nextCandleTime > time && (time / 1000 / 60) % 2 === 1;
 }

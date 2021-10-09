@@ -1,18 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  EventEmitter,
-} from '@angular/core';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  HostListener,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { NbSidebarService } from '@nebular/theme';
-import { LayoutService } from 'src/app/@theme/utils/layout.service';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 
 @Component({
   templateUrl: './future-page.component.html',
