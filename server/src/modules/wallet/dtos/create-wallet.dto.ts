@@ -3,10 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export default class CreateWalletDTO {
   @ApiProperty()
-  @IsEmail()
-  email: string;
+  @IsNotEmpty()
+  walletId: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  password: string;
+  otp: string;
 }

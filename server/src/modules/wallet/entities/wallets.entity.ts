@@ -10,7 +10,7 @@ export default class WalletEntity extends AbstractEntity {
   balance: number;
 
   @Column('varchar', { name: 'address', nullable: true })
-  address: number;
+  address: string;
 
   @Column('decimal', { name: 'total_deposit', default: 0 })
   totalDeposit: number;

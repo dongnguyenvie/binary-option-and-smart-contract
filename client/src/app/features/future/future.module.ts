@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FutureChatComponent } from './components/future-chat/future-chat.component';
 import { FutureBetComponent } from './components/future-bet/future-bet.component';
 import { FutureMonitorComponent } from './components/future-monitor/future-monitor.component';
 import {
@@ -14,16 +13,17 @@ import { IsTypeNumberDirective } from './directives/isTypeNumber.directive';
 import { FutureOrderService } from './future-order.service';
 import { FormsModule } from '@angular/forms';
 import { FutureAnnunciationComponent } from './components/future-annunciation/future-annunciation.component';
+import { FutureChartComponent } from './components/future-chart/future-chart.component';
 @NgModule({
   declarations: [
-    FutureChatComponent,
+    FutureChartComponent,
     FutureBetComponent,
     FutureMonitorComponent,
     FutureAnnunciationComponent,
     IsTypeNumberDirective,
   ],
   exports: [
-    FutureChatComponent,
+    FutureChartComponent,
     FutureBetComponent,
     FutureMonitorComponent,
     FutureAnnunciationComponent,

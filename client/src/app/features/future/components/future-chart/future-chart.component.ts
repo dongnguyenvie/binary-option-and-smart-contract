@@ -9,26 +9,26 @@ import {
   ViewChild,
 } from '@angular/core';
 import { createChart, IChartApi, ISeriesApi } from 'lightweight-charts';
-import { Candle, DateChart } from './interface';
 import { map, Subscription } from 'rxjs';
 import { DataFutureSocketService } from 'src/app/@core/services/data-future-socket.service';
 import { FutureSocketService } from 'src/app/@core/services/future-socket.service';
-import { checkCandleDisable } from './utils/future-chat.util';
+import { AccountService } from 'src/app/@core/services/account.service';
+import { ToastService } from 'src/app/@core/services/toastr.service';
+import { checkCandleDisable } from '../../utils/future.util';
+import { Candle, DateChart } from '../../interfaces';
 import {
   BUY_CANDLE,
   DISABLE_CANDLE,
   SELL_CANDLE,
-} from './constants/future-chat.constant';
-import { AccountService } from 'src/app/@core/services/account.service';
-import { ToastService } from 'src/app/@core/services/toastr.service';
+} from '../../constants/future-chat.constant';
 
 @Component({
-  selector: 'app-future-chat',
-  templateUrl: './future-chat.component.html',
-  styleUrls: ['./future-chat.component.scss'],
+  selector: 'app-future-chart',
+  templateUrl: './future-chart.component.html',
+  styleUrls: ['./future-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FutureChatComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FutureChartComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('chart')
   chart!: ElementRef;
   widthBet = 400;
@@ -68,13 +68,15 @@ export class FutureChatComponent implements OnInit, AfterViewInit, OnDestroy {
       time: this.currentBusinessDay,
     };
     this.dataFutureSvc.connectSocket();
+  }
+
+  ngOnInit(): void {
     this.accountSvc.getUser().subscribe(user => {
       if (!user) return;
       this.futureSvc.connectSocket(this.accountSvc.token);
+      console.log('user token connect', this.accountSvc.token);
     });
   }
-
-  ngOnInit(): void {}
 
   ngAfterViewInit() {
     this.initChart();

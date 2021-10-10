@@ -65,12 +65,12 @@ export default class AuthService {
     const result = await this.userSvc.createUser(user);
     const { accessToken } = await this.createToken(result);
 
-    this.eventEmitter.emit(
-      walletEvent.CREATE_WALLET,
-      new CreateWalletEvent({
-        userId: result.id,
-      }),
-    );
+    // this.eventEmitter.emit(
+    //   walletEvent.CREATE_WALLET,
+    //   new CreateWalletEvent({
+    //     userId: result.id,
+    //   }),
+    // );
 
     return {
       accessToken,

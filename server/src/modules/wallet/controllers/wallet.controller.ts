@@ -1,4 +1,21 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import CurrentUser from 'src/modules/shared/decorators/user.decorator';
+import PoliciesGuard from 'src/modules/shared/guards/policies.guard';
+import { CurrentUser as ICurrentUser } from 'src/modules/shared/interfaces/common.interface';
+import CreateWalletDTO from '../dtos/create-wallet.dto';
+import WalletService from '../servies/wallet.service';
 
-@Controller()
-export default class WalletController {}
+@Controller('wallets')
+export default class WalletController {
+  constructor(private walletSvc: WalletService) {}
+
+  @PoliciesGuard()
+  @Post()
+  createWallet(@Body() createWallet: CreateWalletDTO, @CurrentUser() currentUser: ICurrentUser) {
+    return this.walletSvc.createWallet({
+      userId: currentUser.id,
+      address: createWallet.walletId,
+      otp: createWallet.otp,
+    });
+  }
+}
