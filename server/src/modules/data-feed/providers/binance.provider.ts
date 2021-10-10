@@ -5,7 +5,9 @@ import { BINANCE_PROVIDER } from '../data-feed.constant';
 
 const binanceProvider = {
   useFactory: (): Binance => {
-    return new BinanceInstance() as Binance;
+    return new BinanceInstance().options({
+      keepAlive: true,
+    }) as Binance;
   },
   provide: BINANCE_PROVIDER,
 };

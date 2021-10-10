@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProfileWalletComponent } from './components/profile-wallet/profile-wallet.component';
 import { ProfileInformationComponent } from './components/profile-information/profile-information.component';
-import { WalletService } from './wallet.service';
+import { WalletService } from 'src/app/@core/services/wallet.service';
 
 @NgModule({
-  declarations: [ProfileWalletComponent, ProfileInformationComponent],
+  declarations: [ProfileInformationComponent],
   imports: [CommonModule],
-  exports: [ProfileWalletComponent, ProfileInformationComponent],
-  providers: [WalletService]
+  exports: [ProfileInformationComponent],
+  providers: [WalletService],
 })
 export class ProfileModule {}

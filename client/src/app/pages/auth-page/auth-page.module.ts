@@ -8,6 +8,7 @@ import {
   NbInputModule,
   NbLayoutModule,
   NbSpinnerModule,
+  NbFormFieldModule
 } from '@nebular/theme';
 import { AuthRoutes } from './auth-page-routing.module';
 import { AuthPageComponent } from './auth-page.component';
@@ -27,6 +28,7 @@ import { RegisterPageComponent } from './register-page/register-page.component';
     NbCardModule,
     NbAlertModule,
     AuthRoutes,
+    NbFormFieldModule
   ],
 })
 export class AuthModule {}

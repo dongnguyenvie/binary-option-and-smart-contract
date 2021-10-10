@@ -43,4 +43,39 @@ button {
   .label {
     font-size: 0.84rem;
   }
+  .btn-otp{
+    outline: none;
+    box-shadow: none;
+  }
+  .otp-form-field ::ng-deep .nb-form-field-suffix-medium{
+    margin-left: -65px;
+  }
+
+  .btn-connect-wallet {
+    .icon-metamask {
+      width: 33px;
+      padding-right: 10px;
+    }
+  }
+  .address {
+    background-color: #151a30;
+    padding: 7px 10px;
+    color: #fff;
+    border-radius: 0.25rem;
+    font-size: 14px;
+  }
+  .btn-address {
+    padding: 4px 4px 4px 8px!important;
+    .icon-ethereum {
+      width: 36px;
+      padding-right: 10px;
+    }
+    .amount {
+      padding-right: 10px;
+      font-size: 14px;
+    }
+  }
+  .change-account{
+    padding: 5px 10px;
+  }
 }

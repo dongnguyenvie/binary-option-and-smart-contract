@@ -11,115 +11,161 @@
   <div>
     <h1 id="title" class="title">Register</h1>
     <p class="sub-title">Hello! fast register to trade :v</p>
-
-    <form
-      (ngSubmit)="register()"
-      [formGroup]="registerForm"
-      aria-labelledby="title"
-      novalidate
-    >
-      <div class="form-control-group">
-        <label class="label" for="input-email">Email address:</label>
-        <input
-          nbInput
+    <div class="control-item" *ngIf="$isMetamaskInstall | async">
+      <ng-container *ngIf="$accountSelected | async as accounts">
+        <button
           fullWidth
-          autofocus
-          autocomplete="false"
-          formControlName="email"
-          name="email"
-          id="input-email"
-          placeholder="Enter your email address"
-          required
-          fieldSize="large"
-          [status]="
-            registerForm.get('email')!.touched
-              ? registerForm.get('email')!.dirty
-                ? registerForm.get('email')!.invalid
-                  ? 'danger'
-                  : 'success'
-                : 'primary'
-              : 'primary'
-          "
-          email="true"
-        />
-        <ng-container
-          *ngIf="
-            registerForm.get('email')!.invalid &&
-            registerForm.get('email')!.touched &&
-            registerForm.get('email')!.dirty
-          "
+          nbButton
+          status="primary"
+          outline
+          *ngIf="accounts.length > 0; else showButtonConnect"
+          class="btn-address"
         >
-          <p
-            class="caption status-danger"
-            *ngIf="getError('email', 'required')"
-          >
-            Email is required
-          </p>
-          <p class="caption status-danger" *ngIf="getError('email', 'email')">
-            Email not valid
-          </p>
-        </ng-container>
-      </div>
+          <img
+            class="icon-ethereum"
+            src="assets/icons/ethereum-eth.svg"
+            alt=""
+          />
+          <span class="address">
+            {{ accounts[0] }}
+          </span>
 
-      <div class="form-control-group">
-        <label class="label" for="input-password">Password:</label>
-        <input
-          fieldSize="large"
-          nbInput
-          fullWidth
-          formControlName="password"
-          name="password"
-          type="password"
-          id="input-password"
-          placeholder="Enter your password"
-          [status]="
-            registerForm.get('password')!.touched
-              ? registerForm.get('password')!.invalid
-                ? registerForm.get('password')!.invalid
-                  ? 'danger'
-                  : 'success'
-                : 'primary'
-              : 'primary'
-          "
-        />
-        <ng-container
-          *ngIf="
-            registerForm.get('password')!.invalid &&
-            registerForm.get('password')!.touched &&
-            registerForm.get('password')!.dirty
-          "
-        >
-          <p
-            class="caption status-danger"
-            *ngIf="registerForm.get('password')!.getError('required')"
+          <span class="change-account" (click)="changeAccountMetamask()">
+            change
+          </span>
+        </button>
+        <ng-template #showButtonConnect>
+          <button
+            fullWidth
+            (click)="requestConnectMetamask()"
+            nbButton
+            status="primary"
+            class="btn-connect-wallet"
           >
-            Password is required
-          </p>
-          <p
-            class="caption status-danger"
-            *ngIf="getError('password', 'minlength')"
-          >
-            Password is at least 6 characters
-          </p>
-          <p
-            class="caption status-danger"
-            *ngIf="getError('password', 'maxlength')"
-          >
-            Password up to 50 characters
-          </p>
-        </ng-container>
-      </div>
-      <button
-        nbButton
-        fullWidth
-        type="submit"
-        status="success"
-        [class.btn-pulse]="submitted"
-        size="large"
+            <img class="icon-metamask" src="assets/icons/metamask.svg" alt="" />
+            <span>Connect Wallet</span>
+          </button>
+        </ng-template>
+        <form
+        *ngIf="accounts && accounts[0]"
+        (ngSubmit)="register()"
+        [formGroup]="registerForm"
+        aria-labelledby="title"
+        novalidate
       >
-        Register
-      </button>
-    </form>
+        <div class="form-control-group">
+          <label class="label" for="input-email">Email address:</label>
+          <input
+            nbInput
+            fullWidth
+            autofocus
+            autocomplete="false"
+            formControlName="email"
+            name="email"
+            id="input-email"
+            placeholder="Enter your email address"
+            required
+            fieldSize="large"
+            [status]="
+              registerForm.get('email')!.touched
+                ? registerForm.get('email')!.dirty
+                  ? registerForm.get('email')!.invalid
+                    ? 'danger'
+                    : 'success'
+                  : 'primary'
+                : 'primary'
+            "
+            email="true"
+          />
+  
+          <ng-container
+            *ngIf="
+              registerForm.get('email')!.invalid &&
+              registerForm.get('email')!.touched &&
+              registerForm.get('email')!.dirty
+            "
+          >
+            <p
+              class="caption status-danger"
+              *ngIf="getError('email', 'required')"
+            >
+              Email is required
+            </p>
+            <p class="caption status-danger" *ngIf="getError('email', 'email')">
+              Email not valid
+            </p>
+          </ng-container>
+        </div>
+        <div class="form-control-group">
+          <nb-form-field class="otp-form-field">
+            <input name="otp" placeholder="input OTP from your email" type="text" autocomplete="off" nbInput fullWidth [formControl]="otpFormControl">
+            <button [disabled]="registerForm.get('email')!.invalid" nbSuffix nbButton ghost class="btn-otp" (click)="handleGetOtp()">
+              get otp
+            </button>
+          </nb-form-field>
+        </div>
+        <div class="form-control-group">
+          <label class="label" for="input-password">Password:</label>
+          <input
+            fieldSize="large"
+            nbInput
+            fullWidth
+            formControlName="password"
+            name="password"
+            type="password"
+            id="input-password"
+            placeholder="Enter your password"
+            [status]="
+              registerForm.get('password')!.touched
+                ? registerForm.get('password')!.invalid
+                  ? registerForm.get('password')!.invalid
+                    ? 'danger'
+                    : 'success'
+                  : 'primary'
+                : 'primary'
+            "
+          />
+          <ng-container
+            *ngIf="
+              registerForm.get('password')!.invalid &&
+              registerForm.get('password')!.touched &&
+              registerForm.get('password')!.dirty
+            "
+          >
+            <p
+              class="caption status-danger"
+              *ngIf="registerForm.get('password')!.getError('required')"
+            >
+              Password is required
+            </p>
+            <p
+              class="caption status-danger"
+              *ngIf="getError('password', 'minlength')"
+            >
+              Password is at least 6 characters
+            </p>
+            <p
+              class="caption status-danger"
+              *ngIf="getError('password', 'maxlength')"
+            >
+              Password up to 50 characters
+            </p>
+          </ng-container>
+        </div>
+        <button
+          nbButton
+          fullWidth
+          type="submit"
+          status="success"
+          [class.btn-pulse]="submitted"
+          size="large"
+        >
+          Register
+        </button>
+      </form>
+      </ng-container>
+    </div>
+
     <section
       class="another-action"
       aria-label="Register"

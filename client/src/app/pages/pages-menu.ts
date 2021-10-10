@@ -12,4 +12,14 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'briefcase-outline',
     link: '/pages/profile',
   },
+  {
+    title: 'Wallet',
+    icon: 'briefcase-outline',
+    link: '/pages/wallet',
+  },
+  {
+    title: 'Faucet',
+    icon: 'briefcase-outline',
+    link: '/pages/faucet',
+  },
 ];

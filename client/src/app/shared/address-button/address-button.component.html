@@ -1,0 +1,17 @@
+<button fullWidth nbButton status="primary" outline *ngIf="accounts.length > 0; else showButtonConnect"
+  class="btn-address">
+  <img class="icon-ethereum" src="assets/icons/ethereum-eth.svg" alt="" />
+  <span class="address">
+    {{ accounts[0] }}
+  </span>
+
+  <span class="change-account" (click)="changeAccount()">
+    change
+  </span>
+</button>
+<ng-template #showButtonConnect>
+  <button fullWidth (click)="requestConnect()" nbButton status="primary" class="btn-connect-wallet">
+    <img class="icon-metamask" src="assets/icons/metamask.svg" alt="" />
+    <span>Connect Wallet</span>
+  </button>
+</ng-template>

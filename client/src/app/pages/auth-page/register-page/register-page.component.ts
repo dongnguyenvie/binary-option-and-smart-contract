@@ -1,9 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NbToastrService, NbComponentStatus } from '@nebular/theme';
 import { Observable } from 'rxjs';
 import { AccountService } from 'src/app/@core/services/account.service';
+import { WalletConnectService } from 'src/app/@core/services/wallet-connect.service';
 @Component({
   selector: 'app-register-page',
   templateUrl: './register-page.component.html',
@@ -17,14 +23,21 @@ export class RegisterPageComponent implements OnInit {
   isNotInterNet: boolean = navigator.onLine;
   isShowError: boolean = false;
   message: string;
+  otpFormControl = new FormControl('');
+  $isMetamaskInstall = this.walletConnectService.isMetamaskInstall;
+  $accountSelected = this.walletConnectService.accountSelected;
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
     private accountService: AccountService,
+    private walletConnectService: WalletConnectService,
   ) {}
   ngOnChanges() {}
   ngOnInit() {
+    this.walletConnectService.listenAccountChange.subscribe(data => {
+      console.info('account', data);
+    });
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: [
@@ -45,21 +58,35 @@ export class RegisterPageComponent implements OnInit {
       this.message = '';
       const email: string = this.registerForm.get('email')!.value.toLowerCase();
       const password: string = this.registerForm.get('password')!.value;
-      this.accountService.register(email, password).subscribe(result => {
-        const { error, message } = result;
-        if (error || message) {
-          this.message = error?.message || message;
-        } else {
-          if (result) {
-            this.router.navigate(['/auth/login'], {
-              relativeTo: this.route,
-            });
-            return;
+      const otp: string = this.otpFormControl.value;
+      const walletId: string = this.$accountSelected.getValue()[0];
+      this.accountService
+        .register(email, password, walletId, otp)
+        .subscribe(result => {
+          const { error, message } = result;
+          if (error || message) {
+            this.message = error?.message || message;
+          } else {
+            if (result) {
+              this.router.navigate(['/auth/login'], {
+                relativeTo: this.route,
+              });
+              return;
+            }
           }
-        }
-        this.submitted = false;
-      });
+          this.submitted = false;
+        });
     }
+  }
+
+  handleGetOtp() {}
+
+  requestConnectMetamask() {
+    this.walletConnectService.connectAccount();
+  }
+
+  changeAccountMetamask() {
+    this.walletConnectService.walletRequestPermissions();
   }
   closeAlert() {
     this.isShowError = false;

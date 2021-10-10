@@ -27,6 +27,20 @@ const routes: Routes = [
             m => m.ProfilePageModule,
           ),
       },
+      {
+        path: 'wallet',
+        loadChildren: () =>
+          import('./wallet-page/wallet-page.module').then(
+            m => m.WalletPageModule,
+          ),
+      },
+      {
+        path: 'faucet',
+        loadChildren: () =>
+          import('./faucet-page/faucet-page.module').then(
+            m => m.FaucetPageModule,
+          ),
+      },
     ],
   },
 ];

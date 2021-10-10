@@ -1,10 +1,9 @@
 export interface Profile {
   id: string;
   email: string;
-  wallet: Wallet;
 }
 
-interface Wallet {
+export interface Wallet {
   id: string;
   status: number;
   createdAt: string;

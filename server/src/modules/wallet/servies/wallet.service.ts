@@ -18,17 +18,7 @@ export default class WalletService {
     private cacheSvc: MemoryCacheService,
   ) {}
 
-  confirmOtp(otp: string) {
-    // TODO: otp service
-    if (otp === '0000') return true;
-    return false;
-  }
-
   async createWallet(payload: CreateWallet) {
-    const isOtpValid = this.confirmOtp(payload.otp);
-    if (!isOtpValid) {
-      throw new BadRequestException('OTP is wrong');
-    }
     const wallet = this.walletRepo.create({
       userId: payload.userId,
       balance: 0,
@@ -77,6 +67,6 @@ export default class WalletService {
     const userId = payload.userId;
     const wallet = await this.walletRepo.findOne({ userId: userId });
     if (!!wallet) return;
-    // this.createWallet({ userId: userId });
+    this.createWallet({ userId: userId, address: payload.walletId });
   }
 }

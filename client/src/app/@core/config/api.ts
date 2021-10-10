@@ -6,4 +6,5 @@ export const API = {
   register: `${BACKEND_URL}/signup`,
   profile: `${BACKEND_URL}/profile`,
   order: `${BACKEND_URL}/orders`,
+  wallet: `${BACKEND_URL}/wallets`,
 };

@@ -1,0 +1,34 @@
+<div>
+  <div *ngIf="wallet;else createWallet">
+    <!-- <pre>
+      {{wallet | json}}
+    </pre> -->
+    <table class="table table-dark">
+      <tbody>
+        <tr>
+          <td>Address</td>
+          <td>{{wallet?.address}}</td>
+        </tr>
+        <tr>
+          <td>Balance</td>
+          <td>{{wallet?.balance}}</td>
+        </tr>
+        <tr>
+          <td>total deposit</td>
+          <td>{{wallet?.totalDeposit}}</td>
+        </tr>
+        <tr>
+          <td>totalWithdraw</td>
+          <td>{{wallet?.totalWithdraw}}</td>
+        </tr>
+        <tr>
+          <td>activeDate</td>
+          <td>{{wallet?.activeDate | time}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-template #createWallet>
+    <div>create wallet</div>
+  </ng-template>
+</div>

@@ -8,4 +8,12 @@ export default class SignupDto {
   @ApiProperty()
   @IsNotEmpty()
   password: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  walletId: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  otp: string;
 }

@@ -1,0 +1,21 @@
+<div>
+  <div *ngIf="$accounts | async as accounts;">
+    <p>
+      checkout token <a target="_blank"
+        href="https://rinkeby.etherscan.io/token/0xf5c29338c72bd2d06716c577dc12d15bd0a5943f">0xf5c29338c72bd2d06716c577dc12d15bd0a5943f</a>
+    </p>
+    <app-address-button [accounts]="accounts" [requestConnect]="requestConnectMetaMask.bind(this)"
+      [changeAccount]="changeAccountMetaMask.bind(this)"></app-address-button>
+    <div class="row">
+      <div class="col">
+        <button *ngIf="!!accounts && accounts.length" class="btn btn-info" (click)="getHHDToken()">Get 0.01HHD free
+          now</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isLoading">
+    waiting a few minutes...
+  </div>
+
+
+</div>
