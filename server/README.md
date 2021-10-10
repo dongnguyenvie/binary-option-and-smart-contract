@@ -1,6 +1,7 @@
 #### Init database
 ```
 copy .env.example to .env
+yarn install
 yarn initdb
 ```
 
