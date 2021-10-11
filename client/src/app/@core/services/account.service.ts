@@ -38,7 +38,7 @@ export class AccountService {
   }
 
   getUser() {
-    return this.$currentUserLogin.asObservable();
+    return this.$currentUserLogin;
   }
 
   get token() {

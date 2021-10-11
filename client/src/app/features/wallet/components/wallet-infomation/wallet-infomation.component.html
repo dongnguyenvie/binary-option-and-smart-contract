@@ -1,5 +1,5 @@
 <div>
-  <div *ngIf="wallet;else createWallet">
+  <div *ngIf="wallet">
     <!-- <pre>
       {{wallet | json}}
     </pre> -->
@@ -28,7 +28,4 @@
       </tbody>
     </table>
   </div>
-  <ng-template #createWallet>
-    <div>create wallet</div>
-  </ng-template>
 </div>

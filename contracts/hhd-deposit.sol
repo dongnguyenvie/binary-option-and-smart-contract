@@ -10,7 +10,7 @@ contract HHDPaymentProcessor {
     event PaymentDone(
         address payer,
         uint256 amount,
-        uint256 paymentId,
+        string userId,
         uint256 date
     );
 
@@ -19,14 +19,14 @@ contract HHDPaymentProcessor {
         _;
     }
 
-    constructor(address adminAddress, address daiAddress) public {
+    constructor(address hhdAdrress) public {
         owner = msg.sender;
-        hhd = IERC20(daiAddress);
+        hhd = IERC20(hhdAdrress);
     }
 
-    function pay(uint256 amount, uint256 paymentId) external {
+    function deposit(uint256 amount, string memory userId) external {
         hhd.transferFrom(msg.sender, address(this), amount);
-        emit PaymentDone(msg.sender, amount, paymentId, block.timestamp);
+        emit PaymentDone(msg.sender, amount, userId, block.timestamp);
     }
 
     function withdraw() external onlyOwner {

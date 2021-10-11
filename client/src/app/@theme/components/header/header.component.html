@@ -3,40 +3,24 @@
     <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
       <nb-icon icon="menu-2-outline"></nb-icon>
     </a>
-    <a class="logo" href="#" (click)="navigateHome()"
-      >Trading-<span>Master</span></a
-    >
+    <a class="logo" href="#" (click)="navigateHome()">Trading-<span>Master</span></a>
   </div>
 </div>
 
 <div class="header-container">
   <nb-actions size="small">
-    <nb-action class="control-item" *ngIf="$isMetamaskInstall | async">
+    <nb-action class="control-item">
       <ng-container *ngIf="$accountSelected | async as accounts">
-        <button
-          nbButton
-          status="primary"
-          outline
-          *ngIf="accounts.length > 0; else showButtonConnect"
-          class="btn-address"
-        >
-          <img
-            class="icon-ethereum"
-            src="assets/icons/ethereum-eth.svg"
-            alt=""
-          />
-          <span class="amount">{{ ($balance | async)?.balance }}</span>
+        <button nbButton status="primary" outline *ngIf="accounts.length > 0; else showButtonConnect"
+          class="btn-address">
+          <img class="icon-ethereum" src="assets/icons/ethereum-eth.svg" alt="" />
+          <span class="amount">{{ ($balance | async | balance) }}</span>
           <span class="address">
             {{ accounts[0] | formatAddress }}
           </span>
         </button>
         <ng-template #showButtonConnect>
-          <button
-            (click)="requestConnectMetamask()"
-            nbButton
-            status="primary"
-            class="btn-connect-wallet"
-          >
+          <button (click)="requestConnectMetamask()" nbButton status="primary" class="btn-connect-wallet">
             <img class="icon-metamask" src="assets/icons/metamask.svg" alt="" />
             <span>Connect Wallet</span>
           </button>
@@ -44,13 +28,8 @@
       </ng-container>
     </nb-action>
     <nb-action class="user-action">
-      <nb-user
-        *ngIf="$user | async as user"
-        [nbContextMenu]="userMenu"
-        nbContextMenuTrigger="hover"
-        [name]="user?.email?.split('@').shift() || 'Name default'"
-        picture
-      >
+      <nb-user *ngIf="$user | async as user" [nbContextMenu]="userMenu" nbContextMenuTrigger="hover"
+        [name]="user?.email?.split('@').shift() || 'Name default'" picture>
       </nb-user>
     </nb-action>
   </nb-actions>

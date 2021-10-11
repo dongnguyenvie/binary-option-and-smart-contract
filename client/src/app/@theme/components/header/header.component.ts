@@ -24,10 +24,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userPictureOnly: boolean = false;
   $user: Observable<any> = this.accountService.getUser();
   userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
-  $isMetamaskInstall = this.walletConnectService.isMetamaskInstall;
-  $accountSelected = this.walletConnectService.accountSelected;
-  $balance: Observable<any> = this.walletConnectService.balanceAccountSelected;
-
+  $accountSelected = this.walletConnectService.address;
+  $balance = this.walletConnectService.balance;
   constructor(
     private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
@@ -42,8 +40,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.walletConnectService.listenAccountChange.subscribe(data => {});
-
     this.menuService
       .onItemClick()
       .pipe()
@@ -90,6 +86,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   requestConnectMetamask() {
-    this.walletConnectService.connectAccount();
+    this.walletConnectService.connectWallet();
   }
 }

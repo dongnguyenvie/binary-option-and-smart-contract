@@ -1,180 +1,106 @@
 import { Injectable } from '@angular/core';
 import Web3 from 'web3';
 import { ToastService } from './toastr.service';
-import { BehaviorSubject, fromEvent, Observable, of, Subject, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  fromEvent,
+  map,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Contract } from 'web3-eth-contract';
-import { HHD_ABI, HHD_ADDRESS } from '../config/contract';
-import { provider as web3Provider } from 'web3-core';
+import getBlockchain from '../libs/ethereum';
+import { BigNumber, ethers } from 'ethers';
+import { WALLET_CONNECT_STATUS } from '../config/api';
 
-const ONE_ETH_TO_GWEI = 1e18;
+const WALLET_STATUS = {
+  injected: 'injected',
+};
 @Injectable({
   providedIn: 'root',
 })
 export class WalletConnectService {
-  private ethereum: any;
-  private hhdContract: Contract;
-  private web3: Web3;
-  private $isMetamaskInstall = new BehaviorSubject<boolean>(false);
-  private $accountChanges: Observable<unknown>;
-  private $accountsSelected = new BehaviorSubject<string[]>([]);
-  private $balanceAccountsSelected = new BehaviorSubject<{
-    account: string;
-    balance: number;
-  }>({
-    account: '',
-    balance: 0,
-  });
+  private $hhd = new BehaviorSubject<ethers.Contract>(null as any);
+  private $hhdFaucet = new BehaviorSubject<ethers.Contract>(null as any);
+  private $paymentProcessor = new BehaviorSubject<ethers.Contract>(null as any);
+  private $provider = new BehaviorSubject<ethers.providers.Web3Provider>(
+    null as any,
+  );
+  private $signer = new BehaviorSubject<ethers.providers.JsonRpcSigner>(
+    null as any,
+  );
+  private $account = new BehaviorSubject<string>('');
 
   constructor(private toastService: ToastService) {
-    this.handleCheckMetamaskInstall();
-  }
-
-  async connectAccount() {
-    if (this.ethereum) {
-      try {
-        const accounts = await this.ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-        if (accounts.length > 0) {
-          console.warn('accounts', accounts);
-          this.$accountsSelected.next(accounts as string[]);
-          await this.getUserBalanceByAccount();
-          return accounts;
-        } else {
-          //TODO: handle not found user
-        }
-      } catch (error) {
-        console.log(error);
-        //TODO: handle retrieving account
-        // if (error.code === 4001) {
-        //   // EIP-1193 userRejectedRequest error
-        //   console.log('Please connect to MetaMask.');
-        // } else {
-        //   console.error(error);
-        // }
-      }
+    if (this.isWalletConnected) {
+      this.connectWallet();
     }
   }
 
-  async walletRequestPermissions() {
-    if (this.ethereum) {
-      try {
-        const permissions = await this.ethereum.request({
-          method: 'wallet_requestPermissions',
-          params: [{ eth_accounts: {} }],
-        });
-        const accountsPermission = permissions.find(
-          (permission: any) => permission.parentCapability === 'eth_accounts',
-        );
-        if (accountsPermission) {
-          this.toastService.showToast(
-            'Success',
-            'ETH accounts permission successfully requested',
-            'success',
-          );
-        }
-      } catch (error: any) {
-        if (error.code === 4001) {
-          this.toastService.showToast(
-            'Error permission',
-            'Permissions needed to continue.',
-            'danger',
-          );
-          return;
-        }
-        if (error.code === -32002) {
-          this.toastService.showToast(
-            'Error automation',
-            'Pls open your Memtamask',
-            'danger',
-          );
-          return;
-        }
-        console.error(error);
-      }
-    }
-  }
-
-  handleCheckMetamaskInstall() {
-    if (!!window.ethereum) {
-      this.ethereum = window.ethereum;
-      this.initListenAccountChange();
-      this.initWeb3();
-      this.$isMetamaskInstall.next(true);
-    } else {
-      this.$isMetamaskInstall.next(false);
-    }
-  }
-
-  initListenAccountChange() {
-    this.$accountChanges = fromEvent(this.ethereum, 'accountsChanged').pipe(
-      tap(accounts => {
-        console.log(accounts);
-        this.$accountsSelected.next(accounts as string[]);
-        this.getUserBalanceByAccount();
-      }),
+  get isWalletConnected() {
+    return (
+      localStorage.getItem(WALLET_CONNECT_STATUS) === WALLET_STATUS.injected ||
+      !!this.account.getValue()
     );
   }
 
-  initWeb3() {
-    // this.web3 = new Web3.providers.HttpProvider('http://localhost:8545');
-    this.web3 = new Web3(window.ethereum);
-    this.hhdContract = new this.web3.eth.Contract(HHD_ABI, HHD_ADDRESS);
-    window.ethereum.enable();
-  }
-
-  public async getUserBalanceByAccount(): Promise<any> {
+  public async connectWallet() {
     try {
-      const account = this.$accountsSelected.getValue();
+      const { hhd, hhdFaucet, paymentProcessor, provider } =
+        await getBlockchain();
+      const signer = provider?.getSigner()!;
+      const account = await signer.getAddress();
 
-      const balancePromise = new Promise((resolve, reject) => {
-        // this.web3.eth.getBalance(account[0], function (err: any, balance: any) {
-        //   if (!err) {
-        //     const retVal = {
-        //       account: account,
-        //       balance: (balance / ONE_ETH_TO_GWEI).toFixed(2),
-        //     };
-        //     resolve(retVal);
-        //   } else {
-        //     reject({ account: 'error', balance: 0 });
-        //   }
-        // });
-        this.hhdContract.methods
-          .balanceOf(account[0])
-          .call()
-          .then((balance: string) => {
-            console.warn(`balanceof ${account[0]}`, balance);
-            const retVal = {
-              account: account,
-              balance: (+balance / ONE_ETH_TO_GWEI).toFixed(2),
-            };
-            resolve(retVal);
-          })
-          .catch(() => {
-            reject({ account: 'error', balance: 0 });
-          });
-      }) as Promise<any>;
-      const balance = await balancePromise;
-      this.$balanceAccountsSelected.next(balance);
+      localStorage.setItem(WALLET_CONNECT_STATUS, WALLET_STATUS.injected);
+
+      this.$account.next(account);
+      this.$hhd.next(hhd!.connect(signer));
+      this.$hhdFaucet.next(hhdFaucet!.connect(signer));
+      this.$paymentProcessor.next(paymentProcessor!.connect(signer));
+      this.$provider.next(provider!);
+      this.$signer.next(signer!);
     } catch (error) {}
   }
 
-  get isMetamaskInstall() {
-    return this.$isMetamaskInstall.asObservable();
+  public async disconnectWallet() {
+    localStorage.removeItem(WALLET_CONNECT_STATUS);
+    this.$account.next('');
   }
-  get listenAccountChange() {
-    return this.$accountChanges;
-  }
-  get accountSelected() {
-    return this.$accountsSelected;
-  }
-  get balanceAccountSelected() {
-    return this.$balanceAccountsSelected;
-  }
-}
 
-declare global {
-  interface Window {
-    ethereum: web3Provider & { enable: () => void };
+  get balance() {
+    return this.$hhd
+      .asObservable()
+      .pipe(
+        switchMap(
+          hhd =>
+            hhd.balanceOf(
+              this.$account.getValue(),
+            ) as unknown as Promise<BigNumber>,
+        ),
+      );
+  }
+
+  get address() {
+    return this.$account;
+  }
+
+  get account() {
+    return this.$account;
+  }
+
+  get hhd() {
+    return this.$hhd;
+  }
+
+  get hhdFaucet() {
+    return this.$hhdFaucet;
+  }
+
+  get paymentProcessor() {
+    return this.$paymentProcessor;
   }
 }

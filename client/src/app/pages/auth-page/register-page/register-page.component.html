@@ -11,14 +11,14 @@
   <div>
     <h1 id="title" class="title">Register</h1>
     <p class="sub-title">Hello! fast register to trade :v</p>
-    <div class="control-item" *ngIf="$isMetamaskInstall | async">
-      <ng-container *ngIf="$accountSelected | async as accounts">
+    <div class="control-item">
+      <ng-container *ngIf="($accountSelected | async) as accounts; else showButtonConnect">
         <button
           fullWidth
           nbButton
           status="primary"
           outline
-          *ngIf="accounts.length > 0; else showButtonConnect"
+          *ngIf="accounts.length > 0"
           class="btn-address"
         >
           <img
@@ -27,25 +27,13 @@
             alt=""
           />
           <span class="address">
-            {{ accounts[0] }}
+            {{ accounts }}
           </span>
 
           <span class="change-account" (click)="changeAccountMetamask()">
             change
           </span>
         </button>
-        <ng-template #showButtonConnect>
-          <button
-            fullWidth
-            (click)="requestConnectMetamask()"
-            nbButton
-            status="primary"
-            class="btn-connect-wallet"
-          >
-            <img class="icon-metamask" src="assets/icons/metamask.svg" alt="" />
-            <span>Connect Wallet</span>
-          </button>
-        </ng-template>
         <form
         *ngIf="accounts && accounts[0]"
         (ngSubmit)="register()"
@@ -164,6 +152,18 @@
         </button>
       </form>
       </ng-container>
+      <ng-template #showButtonConnect>
+        <button
+          fullWidth
+          (click)="requestConnectMetamask()"
+          nbButton
+          status="primary"
+          class="btn-connect-wallet"
+        >
+          <img class="icon-metamask" src="assets/icons/metamask.svg" alt="" />
+          <span>Connect Wallet</span>
+        </button>
+      </ng-template>
     </div>
 
     <section

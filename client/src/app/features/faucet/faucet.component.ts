@@ -4,6 +4,7 @@ import Web3 from 'web3';
 import { Contract } from 'web3-eth-contract';
 import { HHD_Faucet_ABI, HHD_Faucet_ADRESS } from './faucet.config';
 import { ToastService } from 'src/app/@core/services/toastr.service';
+import { MESSAGES_CODE } from 'src/app/@core/config/messages';
 
 @Component({
   selector: 'app-faucet',
@@ -11,50 +12,47 @@ import { ToastService } from 'src/app/@core/services/toastr.service';
   styleUrls: ['./faucet.component.scss'],
 })
 export class FaucetComponent implements OnInit {
-  contract: Contract;
-  $accounts = this.walletConnectSvc.accountSelected;
+  $account = this.walletConnectSvc.account;
+  $hhdFaucet = this.walletConnectSvc.hhdFaucet;
   isLoading = false;
 
   constructor(
     private walletConnectSvc: WalletConnectService,
     private toastSvc: ToastService,
-  ) {
-    const web3 = new Web3((window as any).ethereum);
-    this.contract = new web3.eth.Contract(HHD_Faucet_ABI, HHD_Faucet_ADRESS);
+  ) {}
+
+  async getFreeToken() {
+    try {
+      this.isLoading = true;
+      const hhdFaucet = this.$hhdFaucet.getValue();
+      const tx = await hhdFaucet.getFreeToken();
+      console.warn('tx', tx);
+      const resultTx = await tx.wait();
+      console.warn('resultTx', resultTx);
+      this.isLoading = false;
+    } catch (e: any) {
+      console.warn('e.code ', e.code);
+      this.toastSvc.showToast(
+        'Faucet!',
+        MESSAGES_CODE[e.code as keyof typeof MESSAGES_CODE],
+        'danger',
+      );
+      this.isLoading = false;
+    }
   }
 
-  getHHDToken() {
-    this.isLoading = true;
-    this.contract.methods
-      .giveToken()
-      .send({
-        from: this.walletConnectSvc.accountSelected.getValue()[0],
-      })
-      .then((result: any) => {
-        console.warn('getHHDToken result', result);
-        this.walletConnectSvc.getUserBalanceByAccount();
-        this.toastSvc.showToast('Faucet !', 'You got 0.01 HHD', 'success');
-      })
-      .catch((err: any) => {
-        console.error('getHHDToken err', err);
-        this.toastSvc.showToast(
-          'Faucet !',
-          'Maybe has some problem',
-          'success',
-        );
-      })
-      .finally(() => {
-        this.isLoading = false;
-      });
-  }
-
-  requestConnectMetaMask() {
-    this.walletConnectSvc.connectAccount();
+  connectWallet() {
+    this.walletConnectSvc.connectWallet();
   }
 
   changeAccountMetaMask() {
-    this.walletConnectSvc.walletRequestPermissions().catch(() => {
-      alert('open your metamask');
+    this.walletConnectSvc.connectWallet();
+  }
+
+  async ainit() {
+    await this.walletConnectSvc.connectWallet();
+    this.walletConnectSvc.balance.subscribe(async result => {
+      console.log('result', result.toString());
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-address-button',
@@ -6,11 +6,18 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./address-button.component.scss'],
 })
 export class AddressButtonComponent implements OnInit {
-  @Input() accounts: any = [];
-  @Input() changeAccount: () => void;
-  @Input() requestConnect: () => void;
-
+  @Input() account: any = [];
+  @Output() changeAccount = new EventEmitter();
+  @Output() requestConnect = new EventEmitter();
   constructor() {}
 
   ngOnInit() {}
+
+  handleChangeAccount() {
+    this.changeAccount.emit();
+  }
+
+  handleRequestConnect() {
+    this.requestConnect.emit();
+  }
 }

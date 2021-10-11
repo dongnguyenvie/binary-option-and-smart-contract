@@ -20,6 +20,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { MainLayoutComponent } from './layouts/main-layout/main.layout';
 import { LayoutService } from './utils/layout.service';
 import { FormatAddressPipe } from './pipes/formatAddress.pipe';
+import { BalancePipe } from '../@core/pipes/balance.pipe';
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -34,13 +35,18 @@ const NB_MODULES = [
   NbIconModule,
   NbEvaIconsModule,
 ];
-const COMPONENTS = [HeaderComponent, MainLayoutComponent, FormatAddressPipe];
+const COMPONENTS = [
+  HeaderComponent,
+  MainLayoutComponent,
+  FormatAddressPipe,
+  BalancePipe,
+];
 
 @NgModule({
   imports: [CommonModule, ...NB_MODULES],
   exports: [CommonModule, ...COMPONENTS],
   declarations: [...COMPONENTS],
-  providers: [LayoutService]
+  providers: [LayoutService],
 })
 export class ThemeModule {
   static forRoot(): ModuleWithProviders<ThemeModule> {

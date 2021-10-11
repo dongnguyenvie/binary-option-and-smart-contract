@@ -24,8 +24,7 @@ export class RegisterPageComponent implements OnInit {
   isShowError: boolean = false;
   message: string;
   otpFormControl = new FormControl('');
-  $isMetamaskInstall = this.walletConnectService.isMetamaskInstall;
-  $accountSelected = this.walletConnectService.accountSelected;
+  $accountSelected = this.walletConnectService.address;
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -35,9 +34,6 @@ export class RegisterPageComponent implements OnInit {
   ) {}
   ngOnChanges() {}
   ngOnInit() {
-    this.walletConnectService.listenAccountChange.subscribe(data => {
-      console.info('account', data);
-    });
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: [
@@ -59,7 +55,7 @@ export class RegisterPageComponent implements OnInit {
       const email: string = this.registerForm.get('email')!.value.toLowerCase();
       const password: string = this.registerForm.get('password')!.value;
       const otp: string = this.otpFormControl.value;
-      const walletId: string = this.$accountSelected.getValue()[0];
+      const walletId: string = this.walletConnectService.address.getValue();
       this.accountService
         .register(email, password, walletId, otp)
         .subscribe(result => {
@@ -82,11 +78,11 @@ export class RegisterPageComponent implements OnInit {
   handleGetOtp() {}
 
   requestConnectMetamask() {
-    this.walletConnectService.connectAccount();
+    this.walletConnectService.connectWallet();
   }
 
   changeAccountMetamask() {
-    this.walletConnectService.walletRequestPermissions();
+    this.walletConnectService.connectWallet();
   }
   closeAlert() {
     this.isShowError = false;
