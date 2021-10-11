@@ -10,17 +10,16 @@
 <div class="header-container">
   <nb-actions size="small">
     <nb-action class="control-item">
-      <ng-container *ngIf="$accountSelected | async as accounts">
-        <button nbButton status="primary" outline *ngIf="accounts.length > 0; else showButtonConnect"
-          class="btn-address">
+      <ng-container>
+        <button nbButton status="primary" outline *ngIf="$account| async as account; else showButtonConnect" class="btn-address">
           <img class="icon-ethereum" src="assets/icons/ethereum-eth.svg" alt="" />
           <span class="amount">{{ ($balance | async | balance) }}</span>
           <span class="address">
-            {{ accounts[0] | formatAddress }}
+            {{ account | formatAddress }}
           </span>
         </button>
         <ng-template #showButtonConnect>
-          <button (click)="requestConnectMetamask()" nbButton status="primary" class="btn-connect-wallet">
+          <button (click)="connectWallet()" nbButton status="primary" class="btn-connect-wallet">
             <img class="icon-metamask" src="assets/icons/metamask.svg" alt="" />
             <span>Connect Wallet</span>
           </button>

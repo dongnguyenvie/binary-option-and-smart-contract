@@ -44,7 +44,7 @@ export class WalletConnectService {
   get isWalletConnected() {
     return (
       localStorage.getItem(WALLET_CONNECT_STATUS) === WALLET_STATUS.injected ||
-      !!this.account.getValue()
+      !!this.signer.getValue()
     );
   }
 
@@ -88,8 +88,8 @@ export class WalletConnectService {
     return this.$account;
   }
 
-  get account() {
-    return this.$account;
+  get signer() {
+    return this.$signer;
   }
 
   get hhd() {

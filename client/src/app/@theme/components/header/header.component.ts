@@ -24,7 +24,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userPictureOnly: boolean = false;
   $user: Observable<any> = this.accountService.getUser();
   userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
-  $accountSelected = this.walletConnectService.address;
+  $account = this.walletConnectService.address;
+
   $balance = this.walletConnectService.balance;
   constructor(
     private sidebarService: NbSidebarService,
@@ -85,7 +86,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  requestConnectMetamask() {
+  connectWallet() {
     this.walletConnectService.connectWallet();
   }
 }

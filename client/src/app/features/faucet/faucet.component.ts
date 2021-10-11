@@ -12,7 +12,7 @@ import { MESSAGES_CODE } from 'src/app/@core/config/messages';
   styleUrls: ['./faucet.component.scss'],
 })
 export class FaucetComponent implements OnInit {
-  $account = this.walletConnectSvc.account;
+  $account = this.walletConnectSvc.address;
   $hhdFaucet = this.walletConnectSvc.hhdFaucet;
   isLoading = false;
 

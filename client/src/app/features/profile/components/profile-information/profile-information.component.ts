@@ -7,12 +7,11 @@ import { AccountService } from 'src/app/@core/services/account.service';
   styleUrls: ['./profile-information.component.scss'],
 })
 export class ProfileInformationComponent implements OnInit {
-  profile = this.accountService.profile;
+  $profile = this.accountService.profile;
 
   constructor(private accountService: AccountService) {}
 
   ngOnInit(): void {
-    // this.accountService.refreshProfile();
-    console.log('profile', this.profile);
+    this.accountService.fetchProfile().subscribe();
   }
 }
