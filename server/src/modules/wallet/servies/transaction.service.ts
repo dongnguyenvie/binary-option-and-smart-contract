@@ -3,8 +3,13 @@ import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { TransactionType } from 'src/modules/shared/constants/common.contant';
 import { transactionEvent } from 'src/modules/shared/constants/event.constant';
 import CreateBetTransactionEvent from 'src/modules/shared/events/create-bet-transaction.event';
+import CreateDepositTransactionEvent from 'src/modules/shared/events/create-deposit-transaction.event';
 import { TransactionStatus } from '../constants/transaction.constant';
-import { CreateDepositTransaction, CreateTransaction } from '../interfaces/transaction.interface';
+import {
+  CreateDepositTransaction,
+  CreateTransaction,
+  CreateWithrawTransaction,
+} from '../interfaces/transaction.interface';
 import TransactionRepository from '../repositories/transaction.repository';
 import WalletRepository from '../repositories/wallet.repository';
 
@@ -35,7 +40,7 @@ export default class TransactionService {
   }
 
   async createDepositTransaction(payload: CreateDepositTransaction) {
-    const wallet = await this.walletRepo.findOne({ id: payload.walletId }, { select: ['userId', 'id'] });
+    const wallet = await this.walletRepo.findOne({ userId: payload.userId }, { select: ['userId', 'id'] });
     if (!wallet) {
       return new NotFoundException('Wallet is notfound');
     }
@@ -48,7 +53,7 @@ export default class TransactionService {
     );
   }
 
-  async createWithrawTransaction(payload: CreateDepositTransaction) {
+  async createWithrawTransaction(payload: CreateWithrawTransaction) {
     const wallet = await this.walletRepo.findOne({ id: payload.walletId }, { select: ['userId', 'id'] });
     if (!wallet) {
       return new NotFoundException('Wallet is notfound');
@@ -82,5 +87,23 @@ export default class TransactionService {
   @OnEvent(transactionEvent.CREATE_BET_TRANSACTION)
   createBetTransactionEventListener(payload: CreateBetTransactionEvent) {
     this.createBetTransaction(payload);
+  }
+
+  @OnEvent(transactionEvent.CREATE_DEPOSIT_TRANSACTION)
+  createDepositTransactionListener(payload: CreateDepositTransactionEvent) {
+    const description = JSON.stringify({
+      tx: payload.tx,
+      t: payload.timestamp,
+      addr: payload.address,
+    });
+    const USD_RADIO = 1 * 100000;
+    const credit = USD_RADIO * payload.amount;
+
+    this.createDepositTransaction({
+      credit,
+      debit: 0,
+      description,
+      userId: payload.userId,
+    });
   }
 }

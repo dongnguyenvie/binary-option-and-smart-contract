@@ -1,5 +1,6 @@
 export const transactionEvent = {
   CREATE_BET_TRANSACTION: 'transaction.CREATE_BET_TRANSACTION',
+  CREATE_DEPOSIT_TRANSACTION: 'transaction.CREATE_DEPOSIT_TRANSACTION',
 };
 
 export const walletEvent = {

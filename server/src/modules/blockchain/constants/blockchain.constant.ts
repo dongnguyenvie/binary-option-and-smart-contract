@@ -1,0 +1,1 @@
+export const PAYMENT_CONTRACT = 'PAYMENT_CONTRACT';

@@ -25,6 +25,16 @@ export interface CreateOrderTransaction {
 }
 
 export interface CreateDepositTransaction {
+  userId: string;
+
+  description: string;
+
+  credit: number;
+
+  debit: number;
+}
+
+export interface CreateWithrawTransaction {
   walletId: string;
 
   description: string;

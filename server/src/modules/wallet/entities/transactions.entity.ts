@@ -54,6 +54,6 @@ export default class TransactionEntity extends AbstractEntity {
   @JoinColumn({ name: 'order_id' })
   order: OrderEntity;
 
-  @Column({ name: 'order_id' })
+  @Column({ name: 'order_id', nullable: true })
   orderId: string;
 }

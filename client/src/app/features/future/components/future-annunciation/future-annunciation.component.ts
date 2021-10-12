@@ -22,7 +22,7 @@ export class FutureAnnunciationComponent implements OnInit, AfterViewInit {
           position: NbGlobalPhysicalPosition.BOTTOM_RIGHT,
         });
       } else {
-        this.toastSvc.showToast(`WON`, `-${result.profit}`, 'danger', {
+        this.toastSvc.showToast(`LOSE`, `${result.profit}`, 'danger', {
           position: NbGlobalPhysicalPosition.BOTTOM_RIGHT,
         });
       }
