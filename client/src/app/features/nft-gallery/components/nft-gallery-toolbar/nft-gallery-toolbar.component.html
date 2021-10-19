@@ -1,0 +1,90 @@
+<div class="d-flex py-2 justify-content-between">
+  <div>
+    xxxxxxxxxxxxx
+  </div>
+  <div>
+    <button nbButton (click)="connectWalletPressed()" *ngIf="!(address|async); else mintNftBtn">Connect Wallet</button>
+    <ng-template #mintNftBtn>
+      <button nbButton (click)="openMintDialog(dialog)">Mint NFT</button>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #dialog let-data let-ref="dialogRef">
+  <div class="row bg-light rounded p-3">
+    <div class="col-xs-12">
+      <div class="row">
+        <div class="col-xs-6 col-xs-offset-1">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <div class="panel-title">
+                NFT minter
+              </div>
+            </div>
+            <div class="panel-body">
+              <form nftForm (ngSubmit)="newNftItem()" [formGroup]="nftForm" aria-labelledby="title" novalidate>
+                <div class="form">
+                  <div class="row fieldRow">
+                    <div class="col-xs-2">
+                      <label for="assets" class="fieldLabel">
+                        Mint to:
+                      </label>
+                    </div>
+                    <div class="col-xs-10">
+                      <input type="text" id="assest" class="form-control" autocomplete="off" [value]="address|async"
+                        readonly />
+
+                    </div>
+                  </div>
+                  <div class="row fieldRow">
+                    <div class="col-xs-2">
+                      <label for="assets" class="fieldLabel">
+                        assets:
+                      </label>
+                    </div>
+                    <div class="col-xs-10">
+                      <input ngInput type="text" id="assest" formControlName="assets" class="form-control"
+                        autocomplete="off" placeholder="https://images.com" />
+
+                    </div>
+                  </div>
+
+                  <div class="row fieldRow">
+                    <div class="col-xs-2">
+                      <label for="name" class="fieldLabel">
+                        Name:
+                      </label>
+                    </div>
+                    <div class="col-xs-10">
+                      <input ngInput type="text" id="name" formControlName="name" class="form-control"
+                        autocomplete="off" placeholder="Name" />
+                    </div>
+                  </div>
+
+                  <div class=" row fieldRow">
+                    <div class="col-xs-2">
+                      <label for="name" class="fieldLabel">
+                        Description:
+                      </label>
+                    </div>
+                    <div class="col-xs-10">
+                      <input ngInput type="text" id="description" formControlName="description" class="form-control"
+                        autocomplete="off" placeholder="description" />
+                    </div>
+                  </div>
+
+                </div>
+                <div class="row fieldRow pt-3">
+                  <div class="col-xs-10 col-xs-offset-2">
+                    <button class="btn btn-outline-primary" type="submit">Mint NFT</button>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

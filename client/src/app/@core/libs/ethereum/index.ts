@@ -3,6 +3,7 @@ import {
   HHD_ADDRESS,
   HHD_FAUCET_ADDRESS,
   HHD_PAYMENT_PROCESSOR_ADDRESS,
+  NFT_ADDRESS,
 } from '../../config/contract';
 import {
   HHD,
@@ -11,6 +12,8 @@ import {
   HHDPaymentProcessor,
   HHDPaymentProcessor__factory,
   HHD__factory,
+  ShopNFT,
+  ShopNFT__factory,
 } from '../../contracts';
 
 ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.WARNING);
@@ -20,6 +23,7 @@ interface GetBlockchain {
   hhd: HHD;
   hhdFaucet: HHDFaucet;
   signer: ethers.providers.JsonRpcSigner;
+  nft: ShopNFT;
 }
 const getBlockchain = (): Promise<Partial<GetBlockchain>> =>
   new Promise(async (resolve, reject) => {
@@ -57,10 +61,14 @@ const getBlockchain = (): Promise<Partial<GetBlockchain>> =>
       //   signer,
       // );
 
+      //! NFT contract
+      const nft = ShopNFT__factory.connect(NFT_ADDRESS, signer);
+
       console.warn('hhd coin:', hhd);
       console.warn('hhdFaucet coin:', hhdFaucet);
       console.warn('paymentProcessor coin:', paymentProcessor);
-      resolve({ provider, paymentProcessor, hhd, hhdFaucet, signer });
+      console.warn('nft shop:', nft);
+      resolve({ provider, paymentProcessor, hhd, hhdFaucet, signer, nft });
     }
 
     resolve({
@@ -68,6 +76,7 @@ const getBlockchain = (): Promise<Partial<GetBlockchain>> =>
       paymentProcessor: undefined,
       hhd: undefined,
       hhdFaucet: undefined,
+      nft: undefined,
     });
   });
 

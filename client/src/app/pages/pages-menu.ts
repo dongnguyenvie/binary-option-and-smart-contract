@@ -23,8 +23,8 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/faucet',
   },
   {
-    title: 'Faucet',
+    title: 'NFT shop',
     icon: 'shopping-bag-outline',
-    link: '/pages/nft-gallery',
+    link: '/pages/nft',
   },
 ];

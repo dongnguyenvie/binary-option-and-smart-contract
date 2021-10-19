@@ -6,9 +6,10 @@ export const environment = {
   production: false,
   socketUrl: 'localhost:5000',
   apiUrl: 'http://localhost:5000',
-  hhdCoin: '0xb1C138Db016c228c2b9BAB7170727F86caa79eB3',
-  hhdFaucet: '0xFE9485D325bAcb6C4ff0062389d004f2F4D21f87',
-  hhdPaymentProcessor: '0xb861455f90b21Dd2CdC42170275167De37ae857d',
+  hhdCoin: '0x33AfFbc1AdE7771b11f39fab6E193B4f07440c0f',
+  hhdFaucet: '0x36E65A7e0910644f2d901A987B490c9cF46034Ae',
+  hhdPaymentProcessor: '0xF0CDc01f4461F1D8856752c4888e46B0Abf63f32',
+  nft: '0xEe33bf0689929D355b3b01994369b8C374AaDEBD',
 };
 
 /*

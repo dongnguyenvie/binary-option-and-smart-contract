@@ -31,9 +31,6 @@ export class WalletConnectService {
     if (this.isWalletConnected) {
       this.connectWallet();
     }
-    setTimeout(() => {
-      this.balance.subscribe(e => console.log(e));
-    }, 2000);
   }
 
   get isWalletConnected() {

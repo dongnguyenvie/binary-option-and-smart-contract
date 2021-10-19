@@ -16,8 +16,8 @@ export class WalletPaymentComponent implements OnInit {
     private walletConnectSvc: WalletConnectService,
     private accountSvc: AccountService,
   ) {
-    console.log(ethers.utils.formatUnits(BigNumber.from('10000000000000000')));
-    console.log(ethers.utils.parseEther('0.01').toString());
+    // console.log(ethers.utils.formatUnits(BigNumber.from('10000000000000000')));
+    // console.log(ethers.utils.parseEther('0.01').toString());
   }
 
   ngOnInit() {}
