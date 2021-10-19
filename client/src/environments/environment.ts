@@ -6,6 +6,9 @@ export const environment = {
   production: false,
   socketUrl: 'localhost:5000',
   apiUrl: 'http://localhost:5000',
+  hhdCoin: '0xb1C138Db016c228c2b9BAB7170727F86caa79eB3',
+  hhdFaucet: '0xFE9485D325bAcb6C4ff0062389d004f2F4D21f87',
+  hhdPaymentProcessor: '0xb861455f90b21Dd2CdC42170275167De37ae857d',
 };
 
 /*

@@ -1,21 +1,10 @@
 import { Injectable } from '@angular/core';
-import Web3 from 'web3';
 import { ToastService } from './toastr.service';
-import {
-  BehaviorSubject,
-  catchError,
-  fromEvent,
-  map,
-  Observable,
-  of,
-  Subject,
-  switchMap,
-  tap,
-} from 'rxjs';
-import { Contract } from 'web3-eth-contract';
+import { BehaviorSubject, switchMap } from 'rxjs';
 import getBlockchain from '../libs/ethereum';
 import { BigNumber, ethers } from 'ethers';
 import { WALLET_CONNECT_STATUS } from '../config/api';
+import { HHD, HHDFaucet, HHDPaymentProcessor } from '../contracts';
 
 const WALLET_STATUS = {
   injected: 'injected',
@@ -24,9 +13,11 @@ const WALLET_STATUS = {
   providedIn: 'root',
 })
 export class WalletConnectService {
-  private $hhd = new BehaviorSubject<ethers.Contract>(null as any);
-  private $hhdFaucet = new BehaviorSubject<ethers.Contract>(null as any);
-  private $paymentProcessor = new BehaviorSubject<ethers.Contract>(null as any);
+  private $hhd = new BehaviorSubject<HHD>(null as any);
+  private $hhdFaucet = new BehaviorSubject<HHDFaucet>(null as any);
+  private $paymentProcessor = new BehaviorSubject<HHDPaymentProcessor>(
+    null as any,
+  );
   private $provider = new BehaviorSubject<ethers.providers.Web3Provider>(
     null as any,
   );
@@ -36,33 +27,45 @@ export class WalletConnectService {
   private $account = new BehaviorSubject<string>('');
 
   constructor(private toastService: ToastService) {
+    this.init();
     if (this.isWalletConnected) {
       this.connectWallet();
     }
+    setTimeout(() => {
+      this.balance.subscribe(e => console.log(e));
+    }, 2000);
   }
 
   get isWalletConnected() {
     return (
-      localStorage.getItem(WALLET_CONNECT_STATUS) === WALLET_STATUS.injected ||
-      !!this.signer.getValue()
+      localStorage.getItem(WALLET_CONNECT_STATUS) === WALLET_STATUS.injected &&
+      !!this.address.getValue()
     );
+  }
+
+  private async init() {
+    const { hhd, hhdFaucet, paymentProcessor, provider, signer } =
+      await getBlockchain();
+
+    this.$provider.next(provider!);
+    this.$hhd.next(hhd!);
+    this.$hhdFaucet.next(hhdFaucet!);
+    this.$paymentProcessor.next(paymentProcessor!);
+
+    this.$signer.next(signer!);
+    try {
+      const signerAddress = await signer!.getAddress();
+      this.$account.next(signerAddress);
+      this.$hhd.next(hhd!.connect(signer!));
+    } catch (error) {}
   }
 
   public async connectWallet() {
     try {
-      const { hhd, hhdFaucet, paymentProcessor, provider } =
-        await getBlockchain();
-      const signer = provider?.getSigner()!;
-      const account = await signer.getAddress();
-
+      const provider = this.$provider.getValue();
+      const [addr] = await provider?.send('eth_requestAccounts', []);
+      this.$account.next(addr);
       localStorage.setItem(WALLET_CONNECT_STATUS, WALLET_STATUS.injected);
-
-      this.$account.next(account);
-      this.$hhd.next(hhd!.connect(signer));
-      this.$hhdFaucet.next(hhdFaucet!.connect(signer));
-      this.$paymentProcessor.next(paymentProcessor!.connect(signer));
-      this.$provider.next(provider!);
-      this.$signer.next(signer!);
     } catch (error) {}
   }
 

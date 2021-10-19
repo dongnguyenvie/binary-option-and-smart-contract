@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.3.2",
+    "@typechain/ethers-v5": "^7.2.0",
+    "@typechain/truffle-v5": "^5.1.0",
+    "typechain": "^5.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "gen": "typechain typechain --target ethers-v5 --out-dir app/contracts './build/contracts/*.json' "
+  }
+}

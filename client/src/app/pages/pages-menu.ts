@@ -22,4 +22,9 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'briefcase-outline',
     link: '/pages/faucet',
   },
+  {
+    title: 'Faucet',
+    icon: 'shopping-bag-outline',
+    link: '/pages/nft-gallery',
+  },
 ];

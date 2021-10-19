@@ -41,6 +41,13 @@ const routes: Routes = [
             m => m.FaucetPageModule,
           ),
       },
+      {
+        path: 'nft',
+        loadChildren: () =>
+          import('./nft-gallery-page/nft-gallery-page.module').then(
+            m => m.NftGalleryPageModule,
+          ),
+      },
     ],
   },
 ];
