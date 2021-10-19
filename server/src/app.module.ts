@@ -10,6 +10,7 @@ import FutureModule from './modules/future/future.module';
 import OrdersModule from './modules/orders/orders.module';
 import UserModule from './modules/user/user.module';
 import WalletModule from './modules/wallet/wallet.module';
+import NftModule from './modules/nft/nft.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import WalletModule from './modules/wallet/wallet.module';
     FutureModule,
     OrdersModule,
     BlockchainModule,
+    NftModule,
   ],
   controllers: [AppController],
   providers: [],

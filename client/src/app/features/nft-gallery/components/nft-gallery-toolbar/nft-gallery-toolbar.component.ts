@@ -31,7 +31,7 @@ export class NftGalleryToolbarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // this.nftService.$nft.getValue().setEndpoint('http://localhost');
+    //
   }
 
   openMintDialog(dialog: TemplateRef<any>) {

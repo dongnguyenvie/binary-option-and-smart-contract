@@ -33,6 +33,7 @@
     "node-sass": "^6.0.1",
     "normalize.css": "^8.0.1",
     "pace-js": "^1.2.4",
+    "phaser": "^3.55.2",
     "rxjs": "^7.3.0",
     "rxjs-compat": "^6.6.7",
     "socket.io-client": "^4.2.0",

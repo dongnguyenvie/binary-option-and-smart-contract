@@ -17,7 +17,7 @@
     "importHelpers": true,
     "target": "es2017",
     "module": "es2020",
-    "lib": ["es2018", "dom"],
+    "lib": ["es2018", "dom", "scripthost"],
     "strictPropertyInitialization": false,
     "paths": {
       "crypto": ["./node_modules/crypto-browserify"],

@@ -1,3 +1,7 @@
-<p>
-  nft-gallery-content works!
-</p>
+<div>
+  <div *ngIf="data | async as nft" class="row">
+    <div *ngFor="let item of nft;index as i" class="col-3">
+      <h5>{{item.name}} <span class="badge badge-danger">New</span></h5>
+      <img [src]="item.image" class="img-thumbnail" />
+    </div>
+  </div>

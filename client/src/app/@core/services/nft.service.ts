@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ethers } from 'ethers';
 import { BehaviorSubject, map, switchMap, tap } from 'rxjs';
 import { ShopNFT } from '../contracts';
+import { NFT } from '../interfaces/common';
 import getBlockchain from '../libs/ethereum';
 
 @Injectable({
@@ -55,7 +56,7 @@ export class NftService {
     );
   }
 
-  get data() {
+  get linkDatas() {
     return this.pagination.pipe(
       switchMap(pagination => {
         const nft = this.$nft.getValue();
@@ -69,5 +70,14 @@ export class NftService {
       tap(data => console.log(data)),
     );
   }
-  
+
+  get data() {
+    return this.linkDatas.pipe(
+      switchMap(links =>
+        Promise.all(
+          links.map(url => fetch(url).then(res => res.json() as Promise<NFT>)),
+        ),
+      ),
+    );
+  }
 }
