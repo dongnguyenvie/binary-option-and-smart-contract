@@ -1,7 +1,11 @@
 <div>
   <div *ngIf="data | async as nft" class="row">
-    <div *ngFor="let item of nft;index as i" class="col-3">
+    <div *ngFor="let item of nft;index as i" class="col-4">
       <h5>{{item.name}} <span class="badge badge-danger">New</span></h5>
-      <img [src]="item.image" class="img-thumbnail" />
+      <img [src]="item.image" class="img-thumbnail" (click)="openReviewSprite(item)" style="cursor: pointer;" title="review nft" />
     </div>
   </div>
+  <!-- <ng-template #game>
+    <app-mario-game></app-mario-game>
+  </ng-template> -->
+</div>

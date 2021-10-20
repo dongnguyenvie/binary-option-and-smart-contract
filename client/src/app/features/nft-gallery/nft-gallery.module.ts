@@ -13,6 +13,7 @@ import {
 } from '@nebular/theme';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NftGalleryMintDialogComponent } from './components/nft-gallery-mint-dialog/nft-gallery-mint-dialog.component';
+import { MarioGameComponent } from 'src/app/shared/mario-game/mario-game.component';
 
 const shared = [
   NftGalleryToolbarComponent,
@@ -30,8 +31,7 @@ const shared = [
     NbFormFieldModule,
     NbInputModule,
   ],
-  entryComponents: [NftGalleryMintDialogComponent],
-  declarations: [...shared],
+  declarations: [...shared, MarioGameComponent],
   exports: [...shared],
 })
 export class NftGalleryModule {}

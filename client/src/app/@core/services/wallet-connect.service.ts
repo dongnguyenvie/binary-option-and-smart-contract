@@ -54,6 +54,8 @@ export class WalletConnectService {
       const signerAddress = await signer!.getAddress();
       this.$account.next(signerAddress);
       this.$hhd.next(hhd!.connect(signer!));
+      this.$hhdFaucet.next(hhdFaucet!.connect(signer!));
+      this.$paymentProcessor.next(paymentProcessor!.connect(signer!));
     } catch (error) {}
   }
 
@@ -62,6 +64,12 @@ export class WalletConnectService {
       const provider = this.$provider.getValue();
       const [addr] = await provider?.send('eth_requestAccounts', []);
       this.$account.next(addr);
+      const signer = this.signer.getValue();
+      this.$hhd.next(this.hhd.getValue().connect(signer));
+      this.$hhdFaucet.next(this.hhdFaucet.getValue().connect(signer));
+      this.$paymentProcessor.next(
+        this.paymentProcessor.getValue().connect(signer),
+      );
       localStorage.setItem(WALLET_CONNECT_STATUS, WALLET_STATUS.injected);
     } catch (error) {}
   }

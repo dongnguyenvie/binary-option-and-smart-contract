@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import * as Phaser from 'phaser';
 import { MainScene } from './MainScene';
 import { NFT } from '../../@core/interfaces/common';
@@ -7,7 +7,7 @@ import { NFT } from '../../@core/interfaces/common';
   templateUrl: './mario-game.component.html',
   styleUrls: ['./mario-game.component.scss'],
 })
-export class MarioGameComponent implements OnInit {
+export class MarioGameComponent implements OnInit, OnDestroy {
   phaserGame: Phaser.Game;
   config: Phaser.Types.Core.GameConfig;
 
@@ -35,5 +35,9 @@ export class MarioGameComponent implements OnInit {
     this.phaserGame.scene.start('main', {
       nft: this.nft,
     });
+  }
+
+  ngOnDestroy() {
+    this.phaserGame.destroy(true);
   }
 }

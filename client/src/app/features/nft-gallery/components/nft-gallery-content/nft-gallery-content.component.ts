@@ -1,12 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { NbDialogService } from '@nebular/theme';
+import { NFT } from 'src/app/@core/interfaces/common';
 import { NftService } from 'src/app/@core/services/nft.service';
+import { MarioGameComponent } from 'src/app/shared/mario-game/mario-game.component';
 @Component({
   selector: 'app-nft-gallery-content',
   templateUrl: './nft-gallery-content.component.html',
   styleUrls: ['./nft-gallery-content.component.scss'],
 })
 export class NftGalleryContentComponent implements OnInit {
-  constructor(private nftSvc: NftService) {}
+  constructor(
+    private nftSvc: NftService,
+    private dialogService: NbDialogService,
+  ) {}
   data = this.nftSvc.data;
 
   ngOnInit() {
@@ -15,5 +21,13 @@ export class NftGalleryContentComponent implements OnInit {
     // this.nftSvc.data.subscribe(e => {
     //   console.log(e);
     // });
+  }
+
+  openReviewSprite(nft: NFT) {
+    this.dialogService.open(MarioGameComponent, {
+      context: {
+        nft: nft,
+      },
+    });
   }
 }

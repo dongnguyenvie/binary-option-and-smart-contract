@@ -9,19 +9,13 @@ export default class NftController {
   getNft(@Param('id') id: number) {
     return {
       attributes: [
-        {
-          trait_type: 'Shape',
-          value: 'Circle',
-        },
-        {
-          trait_type: 'Mood',
-          value: 'Sad',
-        },
+        { trait_type: 'Shape', value: 'Circle' },
+        { trait_type: 'Mood', value: 'Sad' },
       ],
       description: 'A sad circle.',
-      image: 'https://i.imgur.com/Qkw9N0A.jpeg',
+      image: 'http://localhost:5000/public/images/x1.png',
       name: 'Sad Circle',
-      id: id,
+      id: '1',
     };
   }
 }

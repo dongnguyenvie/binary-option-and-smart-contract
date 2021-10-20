@@ -37,7 +37,7 @@ const getBlockchain = (): Promise<Partial<GetBlockchain>> =>
       //! payment => deposit a wallet
       const paymentProcessor = HHDPaymentProcessor__factory.connect(
         HHD_PAYMENT_PROCESSOR_ADDRESS,
-        signer,
+        provider,
       );
       // const paymentProcessor = new Contract(
       //   HHD_PAYMENT_PROCESSOR_ADDRESS,
@@ -46,7 +46,7 @@ const getBlockchain = (): Promise<Partial<GetBlockchain>> =>
       // );
 
       //! HHD coin
-      const hhd = HHD__factory.connect(HHD_ADDRESS, signer);
+      const hhd = HHD__factory.connect(HHD_ADDRESS, provider);
       // const hhd = new Contract(
       //   HHD_ADDRESS, //for mainnet and public testnet replace by address of already deployed dai token
       //   HHDContract,
@@ -54,7 +54,10 @@ const getBlockchain = (): Promise<Partial<GetBlockchain>> =>
       // );
 
       //! HHD Faucet => get free token
-      const hhdFaucet = HHDFaucet__factory.connect(HHD_FAUCET_ADDRESS, signer);
+      const hhdFaucet = HHDFaucet__factory.connect(
+        HHD_FAUCET_ADDRESS,
+        provider,
+      );
       // const hhdFaucet = new Contract(
       //   HHD_FAUCET_ADDRESS, //for mainnet and public testnet replace by address of already deployed dai token
       //   HHDFaucetContract,
@@ -62,13 +65,19 @@ const getBlockchain = (): Promise<Partial<GetBlockchain>> =>
       // );
 
       //! NFT contract
-      const nft = ShopNFT__factory.connect(NFT_ADDRESS, signer);
+      const nft = ShopNFT__factory.connect(NFT_ADDRESS, provider);
 
       console.warn('hhd coin:', hhd);
       console.warn('hhdFaucet coin:', hhdFaucet);
       console.warn('paymentProcessor coin:', paymentProcessor);
       console.warn('nft shop:', nft);
       resolve({ provider, paymentProcessor, hhd, hhdFaucet, signer, nft });
+      (window as any).nolan = {
+        nft,
+        hhdFaucet,
+        paymentProcessor,
+        hhd,
+      };
     }
 
     resolve({
