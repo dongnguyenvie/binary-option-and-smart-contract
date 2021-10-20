@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import * as Phaser from 'phaser';
 import { MainScene } from './MainScene';
-
+import { NFT } from '../../@core/interfaces/common';
 @Component({
   selector: 'app-mario-game',
   templateUrl: './mario-game.component.html',
@@ -10,6 +10,8 @@ import { MainScene } from './MainScene';
 export class MarioGameComponent implements OnInit {
   phaserGame: Phaser.Game;
   config: Phaser.Types.Core.GameConfig;
+
+  @Input() nft: NFT;
 
   constructor() {
     this.config = {
@@ -22,6 +24,7 @@ export class MarioGameComponent implements OnInit {
         default: 'arcade',
         arcade: {
           gravity: { y: 100 },
+          // debug: true,
         },
       },
     };
@@ -29,5 +32,8 @@ export class MarioGameComponent implements OnInit {
 
   ngOnInit() {
     this.phaserGame = new Phaser.Game(this.config);
+    this.phaserGame.scene.start('main', {
+      nft: this.nft,
+    });
   }
 }
