@@ -112,7 +112,8 @@ export class MainScene extends Phaser.Scene {
     }
 
     if (cursors.up.isDown && this.player.body.touching.down) {
-      this.player.setVelocityY(-530);
+      console.log('this.nft.attrs?.pump', this.nft.attrs);
+      this.player.setVelocityY(-(this.nft.attrs?.pump || 1) * 1.5);
     }
 
     this.name.setPosition(this.player.x - 25, this.player.y - 40);

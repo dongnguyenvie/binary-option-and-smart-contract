@@ -23,6 +23,11 @@ export interface NFT {
   image: string;
   name: string;
   id: string;
+  tokenId: string;
+  attrs?: {
+    pump: number;
+    level: number;
+  };
 }
 
 interface Attribute {

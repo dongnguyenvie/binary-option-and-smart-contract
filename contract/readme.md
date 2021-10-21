@@ -1,3 +1,5 @@
+truffle build
+
 truffle migrate --network development
 truffle console 
 var c = await ShopNFT.deployed()

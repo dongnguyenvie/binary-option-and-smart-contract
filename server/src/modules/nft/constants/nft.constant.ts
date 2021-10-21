@@ -1,0 +1,1 @@
+export const NFT_IMAGE_STORAGE = 'NFT_IMAGE_STORAGE';

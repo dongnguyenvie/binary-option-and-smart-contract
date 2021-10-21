@@ -1,8 +1,16 @@
 <div>
   <div *ngIf="data | async as nft" class="row">
-    <div *ngFor="let item of nft;index as i" class="col-4">
-      <h5>{{item.name}} <span class="badge badge-danger">New</span></h5>
-      <img [src]="item.image" class="img-thumbnail" (click)="openReviewSprite(item)" style="cursor: pointer;" title="review nft" />
+    <div *ngIf="attributes | async as  attrs">
+      <div *ngFor="let item of nft;index as i" class="col-4">
+        <h5>{{item.name}} <span class="badge badge-danger">New</span></h5>
+        <img [src]="item.image" class="img-thumbnail" (click)="openReviewSprite(item, attrs[item.tokenId])"
+          style="cursor: pointer;" title="review nft" />
+        <div>
+          <li *ngFor="let attr of attrs[item.tokenId]">
+            {{attr?.trait_type}}::{{attr?.value}}
+          </li>
+        </div>
+      </div>
     </div>
   </div>
   <!-- <ng-template #game>

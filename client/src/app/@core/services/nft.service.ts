@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ethers } from 'ethers';
+import { BigNumber } from '@ethersproject/bignumber';
 import { BehaviorSubject, map, switchMap, tap } from 'rxjs';
-import { ShopNFT } from '../contracts';
+import { MarioGame } from '../contracts';
 import { NFT } from '../interfaces/common';
 import getBlockchain from '../libs/ethereum';
 
@@ -9,7 +9,7 @@ import getBlockchain from '../libs/ethereum';
   providedIn: 'root',
 })
 export class NftService {
-  $nft = new BehaviorSubject<ShopNFT>(null as any);
+  $nft = new BehaviorSubject<MarioGame>(null as any);
   page = 0;
 
   _itemsPerPage = 10;
@@ -19,8 +19,9 @@ export class NftService {
   }
 
   async init() {
-    const { nft } = await getBlockchain();
+    const { marioNFT: nft } = await getBlockchain();
     this.$nft.next(nft!);
+    (window as any).xx = nft;
   }
 
   get nft() {
@@ -61,11 +62,46 @@ export class NftService {
       switchMap(pagination => {
         const nft = this.$nft.getValue();
         const promise = [];
-        console.log({ pagination });
         for (let i = pagination.start; i < pagination.end; i++) {
           promise.push(nft.tokenURI(i));
         }
         return Promise.all(promise);
+      }),
+      tap(data => console.log(data)),
+    );
+  }
+
+  get attributes() {
+    return this.pagination.pipe(
+      switchMap(pagination => {
+        const nft = this.$nft.getValue();
+        const promise = [];
+        for (let i = pagination.start; i < pagination.end; i++) {
+          promise.push(nft.attrsOf(i).then(result => [i, result]));
+        }
+        return Promise.all(promise);
+      }),
+      map(results => {
+        const mapping: any = {};
+        results.map(sprite => {
+          const [tokenId, attribute] = sprite as [
+            number,
+            [BigNumber, BigNumber],
+          ];
+
+          const [level, pump] = attribute;
+          mapping[tokenId] = [
+            {
+              trait_type: 'level',
+              value: level.toNumber(),
+            },
+            {
+              trait_type: 'pump',
+              value: pump.toNumber(),
+            },
+          ];
+        });
+        return mapping;
       }),
       tap(data => console.log(data)),
     );

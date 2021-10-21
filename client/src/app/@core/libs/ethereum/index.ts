@@ -3,7 +3,7 @@ import {
   HHD_ADDRESS,
   HHD_FAUCET_ADDRESS,
   HHD_PAYMENT_PROCESSOR_ADDRESS,
-  NFT_ADDRESS,
+  MARIO_NFT_ADDR,
 } from '../../config/contract';
 import {
   HHD,
@@ -12,8 +12,8 @@ import {
   HHDPaymentProcessor,
   HHDPaymentProcessor__factory,
   HHD__factory,
-  ShopNFT,
-  ShopNFT__factory,
+  MarioGame,
+  MarioGame__factory,
 } from '../../contracts';
 
 ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.WARNING);
@@ -23,7 +23,7 @@ interface GetBlockchain {
   hhd: HHD;
   hhdFaucet: HHDFaucet;
   signer: ethers.providers.JsonRpcSigner;
-  nft: ShopNFT;
+  marioNFT: MarioGame;
 }
 const getBlockchain = (): Promise<Partial<GetBlockchain>> =>
   new Promise(async (resolve, reject) => {
@@ -65,15 +65,15 @@ const getBlockchain = (): Promise<Partial<GetBlockchain>> =>
       // );
 
       //! NFT contract
-      const nft = ShopNFT__factory.connect(NFT_ADDRESS, provider);
+      const marioNFT = MarioGame__factory.connect(MARIO_NFT_ADDR, provider);
 
       console.warn('hhd coin:', hhd);
       console.warn('hhdFaucet coin:', hhdFaucet);
       console.warn('paymentProcessor coin:', paymentProcessor);
-      console.warn('nft shop:', nft);
-      resolve({ provider, paymentProcessor, hhd, hhdFaucet, signer, nft });
+      console.warn('nft shop:', marioNFT);
+      resolve({ provider, paymentProcessor, hhd, hhdFaucet, signer, marioNFT });
       (window as any).nolan = {
-        nft,
+        marioNFT,
         hhdFaucet,
         paymentProcessor,
         hhd,
@@ -85,7 +85,7 @@ const getBlockchain = (): Promise<Partial<GetBlockchain>> =>
       paymentProcessor: undefined,
       hhd: undefined,
       hhdFaucet: undefined,
-      nft: undefined,
+      marioNFT: undefined,
     });
   });
 

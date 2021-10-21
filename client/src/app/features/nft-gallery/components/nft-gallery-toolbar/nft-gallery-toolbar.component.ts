@@ -30,8 +30,12 @@ export class NftGalleryToolbarComponent implements OnInit {
     private walletService: WalletConnectService,
   ) {}
 
-  ngOnInit() {
-    //
+  async ngOnInit() {
+    // let nftService = this.nftService.$nft.getValue();
+    // const singer = this.walletService.signer.getValue();
+    // console.log('xxxx', this.walletService.address.getValue());
+    // nftService = nftService.connect(singer);
+    // nftService.setEndpoint('http://localhost:5000/api/nfts/');
   }
 
   openMintDialog(dialog: TemplateRef<any>) {
@@ -51,7 +55,9 @@ export class NftGalleryToolbarComponent implements OnInit {
     const assets = this.nftForm.get('assets')!.value;
     const name = this.nftForm.get('name')!.value;
     const description = this.nftForm.get('description')!.value;
-    const nftSvc = this.nftService.nft.getValue();
+    let nftSvc = this.nftService.nft.getValue();
+    const signer = this.walletService.signer.getValue();
+    nftSvc = nftSvc.connect(signer);
     try {
       const tx = await nftSvc.freeMint(this.address.getValue());
       console.log({ tx });

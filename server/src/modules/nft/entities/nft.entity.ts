@@ -6,18 +6,24 @@ export default class NftEntity extends AbstractEntity {
   @Column('varchar', { name: 'token_id' })
   tokenId: string;
 
+  @Column('varchar', { name: 'image' })
+  image: string;
+
   @Column('varchar', { name: 'description' })
   description: string;
+
+  @Column('varchar', { name: 'description' })
+  ipfs: string;
 
   @Column('text', { name: 'name' })
   name: string;
 
-  @Column('jsonb', {
+  @Column({
     name: 'attributes',
+    type: 'json',
     nullable: true,
-    default: [],
   })
-  attributes: string;
+  attributes: JSON;
 
   constructor(partial: Partial<NftEntity>) {
     super();
