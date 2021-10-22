@@ -12,7 +12,7 @@ export default class NftEntity extends AbstractEntity {
   @Column('varchar', { name: 'description' })
   description: string;
 
-  @Column('varchar', { name: 'description' })
+  @Column('varchar', { name: 'ipfs' })
   ipfs: string;
 
   @Column('text', { name: 'name' })

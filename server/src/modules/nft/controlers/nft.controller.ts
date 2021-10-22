@@ -9,7 +9,7 @@ export default class NftController {
   constructor(private nftSvc: NftService) {}
 
   @Get(':id')
-  getNft(@Param('id') id: number) {
+  getNft(@Param('id') id: string) {
     // return {
     //   attributes: [],
     //   description: 'A sad circle.',
@@ -21,10 +21,11 @@ export default class NftController {
     return this.nftSvc.getNFT(id);
   }
 
-  @PoliciesGuard()
+  // @PoliciesGuard()
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   async createNFT(@UploadedFile() image: Express.Multer.File, @Body() nft: CreateNftDTO) {
+    console.log('nft', nft);
     return this.nftSvc.createNFT(nft, image);
   }
 }

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import NftRepository from '../repositories/nft.repository';
 import { NFTStorage, File } from 'nft.storage';
 import { NFT_IMAGE_STORAGE } from '../constants/nft.constant';
@@ -30,7 +30,13 @@ export default class NftService {
     };
   }
 
-  getNFT(id: string) {
-    return this.nftRepo.findOne({ id: id });
+  async getNFT(id: string) {
+    try {
+      const result = await this.nftRepo.findOne({ id: id });
+      if (!result) throw '';
+      return result;
+    } catch (error) {
+      throw new BadRequestException();
+    }
   }
 }

@@ -1,6 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BigNumber } from '@ethersproject/bignumber';
-import { BehaviorSubject, map, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, map, switchMap, tap, filter, Observable } from 'rxjs';
+import { API } from '../config/api';
 import { MarioGame } from '../contracts';
 import { NFT } from '../interfaces/common';
 import getBlockchain from '../libs/ethereum';
@@ -14,7 +16,7 @@ export class NftService {
 
   _itemsPerPage = 10;
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.init();
   }
 
@@ -33,6 +35,21 @@ export class NftService {
       switchMap(nft => nft.currentCounter()),
       map(total => total.toNumber()),
     );
+  }
+
+  createNFT(
+    payload: Required<Pick<NFT, 'name' | 'description'>> & { image: File },
+  ): Observable<any> {
+    console.log('payload', payload);
+    const formData = new FormData();
+    formData.append('image', payload.image);
+    formData.append('name', payload.name);
+    formData.append('description', payload.description);
+    return this.http.post(API.nft, formData, {
+      headers: {
+        'Content-Type': 'multipart',
+      },
+    });
   }
 
   get pagination() {
@@ -111,9 +128,16 @@ export class NftService {
     return this.linkDatas.pipe(
       switchMap(links =>
         Promise.all(
-          links.map(url => fetch(url).then(res => res.json() as Promise<NFT>)),
+          links.map(url =>
+            fetch(url).then(res =>
+              res.ok
+                ? (res.json() as Promise<NFT>)
+                : (null as unknown as Promise<NFT>),
+            ),
+          ),
         ),
       ),
+      map(results => results.filter(result => !!result)),
     );
   }
 }

@@ -35,8 +35,8 @@ interface MarioGameInterface extends ethers.utils.Interface {
     "symbol()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "safeMint(address)": FunctionFragment;
-    "freeMint(address)": FunctionFragment;
+    "safeMint(address,string)": FunctionFragment;
+    "freeMint(address,string)": FunctionFragment;
     "setEndpoint(string)": FunctionFragment;
     "currentCounter()": FunctionFragment;
     "attrsOf(uint256)": FunctionFragment;
@@ -87,8 +87,14 @@ interface MarioGameInterface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
-  encodeFunctionData(functionFragment: "safeMint", values: [string]): string;
-  encodeFunctionData(functionFragment: "freeMint", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "safeMint",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "freeMint",
+    values: [string, string]
+  ): string;
   encodeFunctionData(functionFragment: "setEndpoint", values: [string]): string;
   encodeFunctionData(
     functionFragment: "currentCounter",
@@ -354,11 +360,13 @@ export class MarioGame extends BaseContract {
 
     safeMint(
       to: string,
+      _tokenURI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     freeMint(
       to: string,
+      _tokenURI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -498,11 +506,13 @@ export class MarioGame extends BaseContract {
 
   safeMint(
     to: string,
+    _tokenURI: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   freeMint(
     to: string,
+    _tokenURI: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -633,9 +643,17 @@ export class MarioGame extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    safeMint(to: string, overrides?: CallOverrides): Promise<void>;
+    safeMint(
+      to: string,
+      _tokenURI: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    freeMint(to: string, overrides?: CallOverrides): Promise<void>;
+    freeMint(
+      to: string,
+      _tokenURI: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setEndpoint(endpoint: string, overrides?: CallOverrides): Promise<void>;
 
@@ -841,11 +859,13 @@ export class MarioGame extends BaseContract {
 
     safeMint(
       to: string,
+      _tokenURI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     freeMint(
       to: string,
+      _tokenURI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -990,11 +1010,13 @@ export class MarioGame extends BaseContract {
 
     safeMint(
       to: string,
+      _tokenURI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     freeMint(
       to: string,
+      _tokenURI: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

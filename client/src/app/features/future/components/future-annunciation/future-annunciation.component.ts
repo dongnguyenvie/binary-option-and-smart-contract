@@ -19,8 +19,9 @@ export class FutureAnnunciationComponent
     private futureSvc: FutureSocketService,
     private toastSvc: ToastService,
   ) {}
+
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
+    this.$bestResult.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -40,7 +41,5 @@ export class FutureAnnunciationComponent
     );
   }
 
-  ngOnInit() {
-    this.$bestResult.unsubscribe();
-  }
+  ngOnInit() {}
 }

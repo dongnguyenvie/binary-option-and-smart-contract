@@ -39,9 +39,13 @@ export class HttpConfigInterceptor implements HttpInterceptor {
                 Authorization: `Bearer ${token}`,
               }
             : {}),
-          'Content-Type': !contentType
-            ? 'application/json; charset=utf-8'
-            : contentType,
+          ...(contentType === 'multipart'
+            ? {}
+            : {
+                'Content-Type': !contentType
+                  ? 'application/json; charset=utf-8'
+                  : contentType,
+              }),
         }),
       });
       return next.handle(req).pipe(

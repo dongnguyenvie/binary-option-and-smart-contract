@@ -11,10 +11,8 @@ interface NFT {}
   styleUrls: ['./nft-gallery-toolbar.component.scss'],
 })
 export class NftGalleryToolbarComponent implements OnInit {
-  assets = '';
-
+  image: File;
   nftForm = this.fb.group({
-    assets: ['', [Validators.required]],
     name: ['', [Validators.required]],
     description: ['', [Validators.required]],
   });
@@ -50,26 +48,38 @@ export class NftGalleryToolbarComponent implements OnInit {
     this.walletService.connectWallet();
   }
 
+  onSelectFile(file: File) {
+    console.warn('file selected', file);
+    this.image = file;
+  }
+
   async newNftItem() {
     if (!this.nftForm.valid) return;
-    const assets = this.nftForm.get('assets')!.value;
     const name = this.nftForm.get('name')!.value;
     const description = this.nftForm.get('description')!.value;
-    let nftSvc = this.nftService.nft.getValue();
-    const signer = this.walletService.signer.getValue();
-    nftSvc = nftSvc.connect(signer);
-    try {
-      const tx = await nftSvc.freeMint(this.address.getValue());
-      console.log({ tx });
-      const txDone = await tx.wait();
-      console.log({ txDone });
-    } catch (error) {
-      console.log(error);
-    }
-    console.log({
-      assets,
-      name,
-      description,
-    });
+    this.nftService
+      .createNFT({
+        description: description,
+        name: name,
+        image: this.image,
+      })
+      .subscribe(async (response: any) => {
+        const url = `http://localhost:5000/api/nfts/${response.result.id}`;
+        try {
+          const signer = this.walletService.signer.getValue();
+          let nftSvc = this.nftService.nft.getValue();
+          nftSvc = nftSvc.connect(signer);
+          const tx = await nftSvc.freeMint(this.address.getValue(), url);
+          console.log({ tx });
+          const txDone = await tx.wait();
+          console.log({ txDone });
+        } catch (error) {
+          console.log(error);
+        }
+        console.log({
+          name,
+          description,
+        });
+      });
   }
 }

@@ -8,6 +8,7 @@ export const API = {
   profile: `${BACKEND_URL}/profile`,
   order: `${BACKEND_URL}/orders`,
   wallet: `${BACKEND_URL}/wallets`,
+  nft: `${BACKEND_URL}/nfts`,
 };
 
 export const WALLET_CONNECT_STATUS = 'connectorIdv2';

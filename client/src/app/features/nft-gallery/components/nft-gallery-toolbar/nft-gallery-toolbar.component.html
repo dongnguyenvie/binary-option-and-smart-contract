@@ -33,20 +33,10 @@
                     <div class="col-xs-10">
                       <input type="text" id="assest" class="form-control" autocomplete="off" [value]="address|async"
                         readonly />
-
                     </div>
                   </div>
                   <div class="row fieldRow">
-                    <div class="col-xs-2">
-                      <label for="assets" class="fieldLabel">
-                        assets:
-                      </label>
-                    </div>
-                    <div class="col-xs-10">
-                      <input ngInput type="text" id="assest" formControlName="assets" class="form-control"
-                        autocomplete="off" placeholder="https://images.com" />
-
-                    </div>
+                    <app-file-upload (onFileSelected)="onSelectFile($event)"></app-file-upload>
                   </div>
 
                   <div class="row fieldRow">

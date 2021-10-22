@@ -7,13 +7,12 @@ import { NftGalleryContentComponent } from './components/nft-gallery-content/nft
 import { NftGalleryCardComponent } from './components/nft-gallery-card/nft-gallery-card.component';
 import {
   NbButtonModule,
-  NbDialogModule,
   NbFormFieldModule,
   NbInputModule,
 } from '@nebular/theme';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NftGalleryMintDialogComponent } from './components/nft-gallery-mint-dialog/nft-gallery-mint-dialog.component';
 import { MarioGameComponent } from 'src/app/shared/mario-game/mario-game.component';
+import { FileUploadComponent } from 'src/app/shared/file-upload/file-upload.component';
 
 const shared = [
   NftGalleryToolbarComponent,
@@ -31,7 +30,7 @@ const shared = [
     NbFormFieldModule,
     NbInputModule,
   ],
-  declarations: [...shared, MarioGameComponent],
+  declarations: [...shared, MarioGameComponent, FileUploadComponent],
   exports: [...shared],
 })
 export class NftGalleryModule {}
