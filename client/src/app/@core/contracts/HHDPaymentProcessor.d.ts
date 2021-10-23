@@ -12,6 +12,7 @@ import {
   BaseContract,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -21,24 +22,33 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface HHDPaymentProcessorInterface extends ethers.utils.Interface {
   functions: {
-    "hhd()": FunctionFragment;
-    "owner()": FunctionFragment;
+    "_owner()": FunctionFragment;
     "deposit(uint256,string)": FunctionFragment;
+    "buyToken()": FunctionFragment;
     "withdraw()": FunctionFragment;
+    "withdrawETH()": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "hhd", values?: undefined): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: "_owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "deposit",
     values: [BigNumberish, string]
   ): string;
+  encodeFunctionData(functionFragment: "buyToken", values?: undefined): string;
   encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "withdrawETH",
+    values?: undefined
+  ): string;
 
-  decodeFunctionResult(functionFragment: "hhd", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "_owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "buyToken", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawETH",
+    data: BytesLike
+  ): Result;
 
   events: {
     "PaymentDone(address,uint256,string,uint256)": EventFragment;
@@ -100,9 +110,7 @@ export class HHDPaymentProcessor extends BaseContract {
   interface: HHDPaymentProcessorInterface;
 
   functions: {
-    hhd(overrides?: CallOverrides): Promise<[string]>;
-
-    owner(overrides?: CallOverrides): Promise<[string]>;
+    _owner(overrides?: CallOverrides): Promise<[string]>;
 
     deposit(
       amount: BigNumberish,
@@ -110,14 +118,20 @@ export class HHDPaymentProcessor extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    buyToken(
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     withdraw(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    withdrawETH(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  hhd(overrides?: CallOverrides): Promise<string>;
-
-  owner(overrides?: CallOverrides): Promise<string>;
+  _owner(overrides?: CallOverrides): Promise<string>;
 
   deposit(
     amount: BigNumberish,
@@ -125,14 +139,20 @@ export class HHDPaymentProcessor extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  buyToken(
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   withdraw(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  callStatic: {
-    hhd(overrides?: CallOverrides): Promise<string>;
+  withdrawETH(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
-    owner(overrides?: CallOverrides): Promise<string>;
+  callStatic: {
+    _owner(overrides?: CallOverrides): Promise<string>;
 
     deposit(
       amount: BigNumberish,
@@ -140,7 +160,11 @@ export class HHDPaymentProcessor extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    buyToken(overrides?: CallOverrides): Promise<void>;
+
     withdraw(overrides?: CallOverrides): Promise<void>;
+
+    withdrawETH(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -166,9 +190,7 @@ export class HHDPaymentProcessor extends BaseContract {
   };
 
   estimateGas: {
-    hhd(overrides?: CallOverrides): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
+    _owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     deposit(
       amount: BigNumberish,
@@ -176,15 +198,21 @@ export class HHDPaymentProcessor extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    buyToken(
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     withdraw(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    withdrawETH(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    hhd(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    _owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     deposit(
       amount: BigNumberish,
@@ -192,7 +220,15 @@ export class HHDPaymentProcessor extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    buyToken(
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     withdraw(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawETH(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

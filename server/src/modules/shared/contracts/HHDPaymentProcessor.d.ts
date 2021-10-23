@@ -21,13 +21,11 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface HHDPaymentProcessorInterface extends ethers.utils.Interface {
   functions: {
-    "hhd()": FunctionFragment;
     "owner()": FunctionFragment;
     "deposit(uint256,string)": FunctionFragment;
     "withdraw()": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "hhd", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "deposit",
@@ -35,7 +33,6 @@ interface HHDPaymentProcessorInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: "hhd", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
@@ -100,8 +97,6 @@ export class HHDPaymentProcessor extends BaseContract {
   interface: HHDPaymentProcessorInterface;
 
   functions: {
-    hhd(overrides?: CallOverrides): Promise<[string]>;
-
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     deposit(
@@ -114,8 +109,6 @@ export class HHDPaymentProcessor extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
-
-  hhd(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -130,8 +123,6 @@ export class HHDPaymentProcessor extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    hhd(overrides?: CallOverrides): Promise<string>;
-
     owner(overrides?: CallOverrides): Promise<string>;
 
     deposit(
@@ -166,8 +157,6 @@ export class HHDPaymentProcessor extends BaseContract {
   };
 
   estimateGas: {
-    hhd(overrides?: CallOverrides): Promise<BigNumber>;
-
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     deposit(
@@ -182,8 +171,6 @@ export class HHDPaymentProcessor extends BaseContract {
   };
 
   populateTransaction: {
-    hhd(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     deposit(

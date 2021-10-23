@@ -1,11 +1,13 @@
 <div class="d-flex py-2 justify-content-between">
   <div>
-    xxxxxxxxxxxxx
+    x0x0x0x0xx0x0x0x
   </div>
   <div>
     <button nbButton (click)="connectWalletPressed()" *ngIf="!(address|async); else mintNftBtn">Connect Wallet</button>
     <ng-template #mintNftBtn>
-      <button nbButton (click)="openMintDialog(dialog)">Mint NFT</button>
+      <button nbButton (click)="openMintDialog(dialog, false)">Free Mint NFT</button>
+      <button nbButton status="warning" class="mx-1" (click)="openMintDialog(dialog, true)">Premium Mint NFT(0.1
+        HHD)</button>
     </ng-template>
   </div>
 </div>
@@ -19,11 +21,16 @@
             <div class="panel-heading">
               <div class="panel-title">
                 NFT minter
+                <div *ngIf="isLoading">
+                  <b>Loading....</b>
+                </div>
               </div>
             </div>
             <div class="panel-body">
-              <form nftForm (ngSubmit)="newNftItem()" [formGroup]="nftForm" aria-labelledby="title" novalidate>
+              <form nftForm (ngSubmit)="isPremium ? mintPremiumNFT() :freeMintNFT()" [formGroup]="nftForm"
+                aria-labelledby="title" novalidate>
                 <div class="form">
+
                   <div class="row fieldRow">
                     <div class="col-xs-2">
                       <label for="assets" class="fieldLabel">
@@ -66,7 +73,7 @@
                 </div>
                 <div class="row fieldRow pt-3">
                   <div class="col-xs-10 col-xs-offset-2">
-                    <button class="btn btn-outline-primary" type="submit">Mint NFT</button>
+                    <button class="btn btn-outline-primary" type="submit" [disabled]="isLoading">Mint NFT</button>
                   </div>
                 </div>
               </form>

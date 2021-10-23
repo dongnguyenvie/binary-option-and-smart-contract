@@ -22,7 +22,7 @@ export class MainScene extends Phaser.Scene {
 
   create() {
     this.add.image(400, 300, 'sky');
-    this.add.image(400, 300, 'star');
+    // this.add.image(400, 300, 'star');
 
     this.platforms = this.physics.add.staticGroup();
 
@@ -38,6 +38,9 @@ export class MainScene extends Phaser.Scene {
       0,
       0,
       `[LV${this.nft.attrs.level}] ${this.nft.name}`,
+      {
+        ...(this.nft.attrs.level > 10 ? { color: 'yellow' } : {}),
+      },
     );
     // this.level = this.add.text(0, 0, this.nft.attrs.level.toString(), {
     //   fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
@@ -47,22 +50,22 @@ export class MainScene extends Phaser.Scene {
     this.player = this.physics.add.sprite(100, 450, 'dude');
     this.player.setBounce(0.5);
     this.player.setCollideWorldBounds(true);
-    this.player.anims.create({
+    this.anims.create({
       key: 'left',
-      frames: [{ key: 'dude', frame: 1 }],
+      frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
       frameRate: 10,
       repeat: -1,
     });
 
     this.anims.create({
       key: 'turn',
-      frames: this.anims.generateFrameNumbers('dude', { start: 4, end: 6 }),
+      frames: [{ key: 'dude', frame: 4 }],
       frameRate: 20,
     });
 
     this.anims.create({
       key: 'right',
-      frames: [{ key: 'dude', frame: 8 }],
+      frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
       frameRate: 10,
       repeat: -1,
     });
@@ -99,8 +102,8 @@ export class MainScene extends Phaser.Scene {
     this.load.image('star', 'assets/images/game/star.png');
     this.load.image('bomb', 'assets/images/game/bomb.png');
     this.load.spritesheet('dude', this.nft.image, {
-      frameWidth: 25,
-      frameHeight: 38,
+      frameWidth: 32,
+      frameHeight: 48,
     });
   }
 
@@ -121,7 +124,7 @@ export class MainScene extends Phaser.Scene {
     }
 
     if (cursors.up.isDown && this.player.body.touching.down) {
-      this.player.setVelocityY(-(this.nft.attrs?.pump || 1) * 1.5);
+      this.player.setVelocityY(-(this.nft.attrs?.pump || 1));
     }
 
     this.name.setPosition(this.player.x - 25, this.player.y - 40);

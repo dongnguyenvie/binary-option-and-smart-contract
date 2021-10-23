@@ -11,7 +11,7 @@ import { WalletService } from 'src/app/@core/services/wallet.service';
 })
 export class WalletInfomationComponent implements OnInit {
   $profile = this.accountsvc.profile;
-  wallet: Wallet;
+  wallet = this.walletSvc.wallet;
 
   constructor(
     private accountsvc: AccountService,
@@ -19,10 +19,6 @@ export class WalletInfomationComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.walletSvc.fetchGetMyWallet().subscribe(result => {
-      if (!!result?.id) {
-        this.wallet = result;
-      }
-    });
+    this.walletSvc.fetchGetMyWallet().subscribe(result => {});
   }
 }

@@ -21,7 +21,7 @@ export default class NftController {
     return this.nftSvc.getNFT(id);
   }
 
-  // @PoliciesGuard()
+  @PoliciesGuard()
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   async createNFT(@UploadedFile() image: Express.Multer.File, @Body() nft: CreateNftDTO) {

@@ -13,7 +13,7 @@
       <ng-container>
         <button nbButton status="primary" outline *ngIf="$account| async as account; else showButtonConnect" class="btn-address">
           <img class="icon-ethereum" src="assets/icons/ethereum-eth.svg" alt="" />
-          <span class="amount">{{ ($balance | async | balance) }}</span>
+          <span class="amount">{{ ($balance | async) }}</span>
           <span class="address">
             {{ account | formatAddress }}
           </span>

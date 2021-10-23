@@ -26,11 +26,22 @@ export class WalletConnectService {
   );
   private $account = new BehaviorSubject<string>('');
 
+  private $balance = new BehaviorSubject<string>('---');
+
   constructor(private toastService: ToastService) {
     this.init();
     if (this.isWalletConnected) {
       this.connectWallet();
     }
+  }
+
+  async refresh() {
+    const address = this.address.getValue();
+    const hhd = this.$hhd.getValue();
+    if (!address) return;
+
+    const balance = await hhd.balanceOf(this.$account.getValue());
+    this.$balance.next(balance.toString());
   }
 
   get isWalletConnected() {
@@ -57,6 +68,7 @@ export class WalletConnectService {
       this.$hhdFaucet.next(hhdFaucet!.connect(signer!));
       this.$paymentProcessor.next(paymentProcessor!.connect(signer!));
     } catch (error) {}
+    this.refresh();
   }
 
   public async connectWallet() {
@@ -70,6 +82,7 @@ export class WalletConnectService {
       this.$paymentProcessor.next(
         this.paymentProcessor.getValue().connect(signer),
       );
+      this.refresh();
       localStorage.setItem(WALLET_CONNECT_STATUS, WALLET_STATUS.injected);
     } catch (error) {}
   }
@@ -80,16 +93,17 @@ export class WalletConnectService {
   }
 
   get balance() {
-    return this.$hhd
-      .asObservable()
-      .pipe(
-        switchMap(
-          hhd =>
-            hhd.balanceOf(
-              this.$account.getValue(),
-            ) as unknown as Promise<BigNumber>,
-        ),
-      );
+    return this.$balance;
+    // return this.$hhd
+    //   .asObservable()
+    //   .pipe(
+    //     switchMap(
+    //       hhd =>
+    //         hhd.balanceOf(
+    //           this.$account.getValue(),
+    //         ) as unknown as Promise<BigNumber>,
+    //     ),
+    //   );
   }
 
   get address() {

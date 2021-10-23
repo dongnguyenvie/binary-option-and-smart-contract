@@ -1,11 +1,31 @@
 <div>
+  <h2>#Deposit</h2>
   <div class="alert alert-danger" role="alert">
-    Deposit 0.01HHD = 1000$
+    0.01HHD = 1000 cen
   </div>
   <div class="amount">
-    <button type="button" class="btn btn-primary" (click)="deposit('0.01')">0.01 HHD</button>
-    <button type="button" class="btn btn-primary" (click)="deposit('0.05')">0.05 HHD</button>
-    <button type="button" class="btn btn-primary" (click)="deposit('0.1')">0.1 HHD</button>
-    <button type="button" class="btn btn-primary" (click)="deposit('0.5')">0.5 HHD</button>
+    <button type="button" class="btn btn-primary" (click)="deposit('0.01')">Deposit 0.01 HHD</button>
+    <button type="button" class="btn btn-primary" (click)="deposit('0.05')">Deposit 0.05 HHD</button>
+    <button type="button" class="btn btn-primary" (click)="deposit('0.1')">Deposit 0.1 HHD</button>
+    <button type="button" class="btn btn-primary" (click)="deposit('0.5')">Deposit 0.5 HHD</button>
+  </div>
+  <hr>
+  <div class="row">
+    <h2>#Buy Token</h2>
+    <div class="col">
+      <div class="alert alert-danger" role="alert">
+        1ETH = 2HHD
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-10">
+        <input type="number" class="form-control" [(ngModel)]="amount" #ctrl="ngModel" required>
+      </div>
+      <label class="col-sm-2">
+        <button type="button" class="btn btn-primary" [disabled]="!amount || amount < 0"
+          (click)="buyToken()">BUY</button>
+      </label>
+    </div>
+
   </div>
 </div>

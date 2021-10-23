@@ -16,7 +16,6 @@ export type { IERC721Metadata } from "./IERC721Metadata";
 export type { IERC721Receiver } from "./IERC721Receiver";
 export type { MarioGame } from "./MarioGame";
 export type { Ownable } from "./Ownable";
-export type { ShopNFT } from "./ShopNFT";
 
 export { ERC165__factory } from "./factories/ERC165__factory";
 export { ERC20__factory } from "./factories/ERC20__factory";
@@ -33,4 +32,3 @@ export { IERC721Metadata__factory } from "./factories/IERC721Metadata__factory";
 export { IERC721Receiver__factory } from "./factories/IERC721Receiver__factory";
 export { MarioGame__factory } from "./factories/MarioGame__factory";
 export { Ownable__factory } from "./factories/Ownable__factory";
-export { ShopNFT__factory } from "./factories/ShopNFT__factory";

@@ -1,5 +1,5 @@
 <div>
-  <div *ngIf="wallet">
+  <div *ngIf="wallet | async as wallet">
     <!-- <pre>
       {{wallet | json}}
     </pre> -->

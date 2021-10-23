@@ -6,10 +6,10 @@ const HHDPaymentProcessor = artifacts.require("HHDPaymentProcessor");
 module.exports = function (deployer) {
   deployer.then(async () => {
     // deploy marial
-    await deployer.deploy(MarioGame, "MarioGame", "MARIO");
-    
+
     await deployer.deploy(HHDCoin, "HHD premium", "hhd", 999999);
     await deployer.deploy(HHDPaymentProcessor, HHDCoin.address);
+    await deployer.deploy(MarioGame, "MarioGame", "MARIO", HHDCoin.address, HHDPaymentProcessor.address);
     await deployer.deploy(HHDFaucet, HHDCoin.address);
   });
 };

@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 
 const nftStorageProvider = {
   useFactory: (config: ConfigService) => {
-    const instance = new NFTStorage({ token: config.get('MFT_STORAGE_KEY') });
+    const instance = new NFTStorage({ token: config.get('NFT_STORAGE_KEY') });
     return instance;
   },
   provide: NFT_IMAGE_STORAGE,
