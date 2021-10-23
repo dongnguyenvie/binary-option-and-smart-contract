@@ -12,6 +12,9 @@ import getBlockchain from '../libs/ethereum';
 })
 export class NftService {
   $nft = new BehaviorSubject<MarioGame>(null as any);
+  $collects = new BehaviorSubject<NFT[]>([]);
+  $total = new BehaviorSubject<number>(0);
+
   page = 0;
 
   _itemsPerPage = 10;
@@ -21,9 +24,10 @@ export class NftService {
   }
 
   async init() {
-    const { marioNFT: nft } = await getBlockchain();
-    this.$nft.next(nft!);
-    (window as any).xx = nft;
+    const { marioNFT } = await getBlockchain();
+    const nft = marioNFT!;
+    this.$nft.next(nft);
+    this.refresh();
   }
 
   get nft() {
@@ -35,6 +39,13 @@ export class NftService {
       switchMap(nft => nft.currentCounter()),
       map(total => total.toNumber()),
     );
+  }
+
+  async refresh() {
+    const nft = this.$nft.getValue();
+    const total = (await nft!.currentCounter()).toNumber();
+    const pagination = this.caculatePagination(total);
+    this.fetchCollects(nft, total, pagination);
   }
 
   createNFT(
@@ -52,26 +63,65 @@ export class NftService {
     });
   }
 
-  get pagination() {
-    return this.total.pipe(
-      map(total => {
-        const start = Math.max(0, this.page - 1) * this._itemsPerPage + 1;
-        let end = total;
-        if (total > this._itemsPerPage) {
-          end = this._itemsPerPage * this.page;
-          if (end > total) {
-            end = total;
-          }
-        }
+  caculatePagination(total: number) {
+    const start = Math.max(0, this.page - 1) * this._itemsPerPage + 1;
+    let end = total;
+    if (total > this._itemsPerPage) {
+      end = this._itemsPerPage * this.page;
+      if (end > total) {
+        end = total;
+      }
+    }
 
-        return {
-          start,
-          end,
-          page: this.page,
-          total: this.total,
-        };
-      }),
-    );
+    return {
+      start,
+      end,
+      page: this.page,
+      total: this.total,
+    };
+  }
+
+  async fetchCollects(nft: MarioGame, total: number, pagination: any) {
+    const tokenUriPromise = [];
+    const attrsPromise = [];
+    for (let i = pagination.start; i < pagination.end; i++) {
+      tokenUriPromise.push(
+        nft
+          .tokenURI(i)
+          .then(url =>
+            fetch(url).then(res =>
+              res.ok
+                ? (res.json() as Promise<NFT>)
+                : (null as unknown as Promise<NFT>),
+            ),
+          ),
+      );
+      attrsPromise.push(nft.attrsOf(i));
+    }
+
+    const tokenUris = await Promise.all(tokenUriPromise);
+    const attrs = await Promise.all(attrsPromise);
+    let results: any[] = [];
+    tokenUris.forEach((nft, idx) => {
+      if (!nft) return;
+      results.push({
+        ...nft,
+        attrs: {
+          level: attrs[idx].level.toNumber(),
+          pump: attrs[idx].pump.toNumber(),
+        },
+      });
+    });
+    console.log({ results });
+    this.$collects.next(results);
+  }
+
+  get pagination() {
+    return this.$total.pipe(map(total => this.caculatePagination(total)));
+  }
+
+  get collects() {
+    return this.$collects;
   }
 
   get linkDatas() {

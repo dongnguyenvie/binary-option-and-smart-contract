@@ -16,6 +16,8 @@ export class NftGalleryContentComponent implements OnInit {
   data = this.nftSvc.data;
   attributes = this.nftSvc.attributes;
 
+  collects = this.nftSvc.collects;
+
   ngOnInit() {
     (window as any).nft = this.nftSvc;
     this.nftSvc.$nft.getValue().setEndpoint('http://localhost:5000/api/nfts/');
@@ -27,12 +29,7 @@ export class NftGalleryContentComponent implements OnInit {
     // });
   }
 
-  openReviewSprite(nft: NFT, attrs: any[]) {
-    const spriteAttr: any = {};
-    attrs.forEach((obj: any) => {
-      spriteAttr[obj.trait_type] = obj.value;
-    });
-    Object.assign(nft, { attrs: spriteAttr });
+  openReviewSprite(nft: NFT) {
     this.dialogService.open(MarioGameComponent, {
       context: {
         nft: nft,

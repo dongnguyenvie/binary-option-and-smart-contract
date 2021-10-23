@@ -30,6 +30,7 @@ export default class TransactionService {
       debit: payload.debit,
       description: payload.description,
       status: TransactionStatus.PROCESSING,
+      tx: payload.tx || undefined,
       type: type,
     });
     // if (type === TransactionType.BETTING) {
@@ -48,6 +49,7 @@ export default class TransactionService {
       {
         ...payload,
         wallet,
+        tx: payload.tx,
       },
       TransactionType.DEPOSIT,
     );
@@ -84,13 +86,20 @@ export default class TransactionService {
     return results;
   }
 
+  async isSolved(tx: string) {
+    const result = await this.transactionRepo.findOne({ tx: tx });
+    return result;
+  }
+
   @OnEvent(transactionEvent.CREATE_BET_TRANSACTION)
   createBetTransactionEventListener(payload: CreateBetTransactionEvent) {
     this.createBetTransaction(payload);
   }
 
   @OnEvent(transactionEvent.CREATE_DEPOSIT_TRANSACTION)
-  createDepositTransactionListener(payload: CreateDepositTransactionEvent) {
+  async createDepositTransactionListener(payload: CreateDepositTransactionEvent) {
+    const isSolved = await this.isSolved(payload.tx);
+    if (!!isSolved) return;
     const description = JSON.stringify({
       tx: payload.tx,
       t: payload.timestamp,
@@ -104,6 +113,7 @@ export default class TransactionService {
       debit: 0,
       description,
       userId: payload.userId,
+      tx: payload.tx,
     });
   }
 }

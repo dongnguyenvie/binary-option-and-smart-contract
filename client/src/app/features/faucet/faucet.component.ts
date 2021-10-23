@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { WalletConnectService } from 'src/app/@core/services/wallet-connect.service';
-import Web3 from 'web3';
-import { Contract } from 'web3-eth-contract';
-import { HHD_Faucet_ABI, HHD_Faucet_ADRESS } from './faucet.config';
 import { ToastService } from 'src/app/@core/services/toastr.service';
 import { MESSAGES_CODE } from 'src/app/@core/config/messages';
 

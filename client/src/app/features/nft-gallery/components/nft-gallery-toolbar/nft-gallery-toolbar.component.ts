@@ -17,6 +17,7 @@ export class NftGalleryToolbarComponent implements OnInit {
     description: ['', [Validators.required]],
   });
 
+  dialog: any;
   address = this.walletService.address;
 
   isConnected = this.walletService.isWalletConnected;
@@ -37,7 +38,7 @@ export class NftGalleryToolbarComponent implements OnInit {
   }
 
   openMintDialog(dialog: TemplateRef<any>) {
-    this.dialogService.open(dialog, {
+    this.dialog = this.dialogService.open(dialog, {
       // context: {
       //   title: 'This is a title passed to the dialog component',
       // },
@@ -73,6 +74,9 @@ export class NftGalleryToolbarComponent implements OnInit {
           console.log({ tx });
           const txDone = await tx.wait();
           console.log({ txDone });
+          alert('Mint successfully');
+          !!this.dialog && this.dialog.close();
+          this.nftService.refresh();
         } catch (error) {
           console.log(error);
         }

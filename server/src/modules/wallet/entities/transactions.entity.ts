@@ -18,6 +18,9 @@ export default class TransactionEntity extends AbstractEntity {
   @Column('text', { name: 'description', nullable: true })
   description: string;
 
+  @Column('varchar', { name: 'tx', nullable: true })
+  tx: string;
+
   /** User relationship */
   @ManyToOne(() => UserEntity, (user) => user.transactions, {
     lazy: true,

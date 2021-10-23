@@ -25,6 +25,9 @@ contract HHDPaymentProcessor {
     }
 
     function deposit(uint256 amount, string memory userId) external {
+        require(amount > 0, "Amount must be bigger than 0");
+        uint256 allowance = hhd.allowance(msg.sender, address(this));
+        require(allowance >= amount, "Pls approve first");
         hhd.transferFrom(msg.sender, address(this), amount);
         emit PaymentDone(msg.sender, amount, userId, block.timestamp);
     }

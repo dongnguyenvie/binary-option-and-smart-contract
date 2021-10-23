@@ -10,6 +10,8 @@ export interface CreateTransaction {
   credit: number;
 
   debit: number;
+
+  tx?: string;
 }
 
 export interface CreateOrderTransaction {
@@ -32,6 +34,8 @@ export interface CreateDepositTransaction {
   credit: number;
 
   debit: number;
+
+  tx: string;
 }
 
 export interface CreateWithrawTransaction {

@@ -24,7 +24,7 @@ export interface NFT {
   name: string;
   id: string;
   tokenId: string;
-  attrs?: {
+  attrs: {
     pump: number;
     level: number;
   };

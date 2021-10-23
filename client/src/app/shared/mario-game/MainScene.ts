@@ -13,6 +13,7 @@ export class MainScene extends Phaser.Scene {
 
   nft: NFT;
   name: Phaser.GameObjects.Text;
+  // level: Phaser.GameObjects.Text;
 
   init(data: { nft: NFT }) {
     console.info('data', data.nft);
@@ -33,7 +34,15 @@ export class MainScene extends Phaser.Scene {
     this.platforms.create(750, 220, 'ground');
     //
 
-    this.name = this.add.text(0, 0, this.nft.name);
+    this.name = this.add.text(
+      0,
+      0,
+      `[LV${this.nft.attrs.level}] ${this.nft.name}`,
+    );
+    // this.level = this.add.text(0, 0, this.nft.attrs.level.toString(), {
+    //   fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
+    //   color: 'red',
+    // });
 
     this.player = this.physics.add.sprite(100, 450, 'dude');
     this.player.setBounce(0.5);
@@ -112,7 +121,6 @@ export class MainScene extends Phaser.Scene {
     }
 
     if (cursors.up.isDown && this.player.body.touching.down) {
-      console.log('this.nft.attrs?.pump', this.nft.attrs);
       this.player.setVelocityY(-(this.nft.attrs?.pump || 1) * 1.5);
     }
 
