@@ -1,4 +1,6 @@
 import { EventEmitter2 } from 'eventemitter2';
+import { walletEvent } from 'src/modules/shared/constants/event.constant';
+import SyncWalletToMemoryEvent from 'src/modules/shared/events/sync-wallet-to-memory-event';
 
 import { Connection, EntitySubscriberInterface, EventSubscriber, InsertEvent } from 'typeorm';
 import { TransactionStatus } from '../constants/transaction.constant';
@@ -29,7 +31,7 @@ export default class TransactionSubscriber implements EntitySubscriberInterface<
         {
           id: transaction.walletId,
         },
-        { select: ['id', 'balance'] },
+        { select: ['id', 'balance', 'userId'] },
       );
       if (!wallet) {
         throw 'Wallet is not found';
@@ -43,6 +45,10 @@ export default class TransactionSubscriber implements EntitySubscriberInterface<
       });
       await manager.save(wallet);
       await manager.save(transaction);
+      this.eventEmitter.emit(
+        walletEvent.SYNC_WALLET_TO_MEMORY,
+        new SyncWalletToMemoryEvent({ userId: wallet.userId }),
+      );
     });
   }
 }
