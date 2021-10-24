@@ -40,8 +40,10 @@ Deposit and buy token feature
 | [ethers]                          | Is a library which interact smart contract as well                              |
 | [Nestjs] | Is a framework for backend |
 | [Angular]                 | Is a framework for frontend                          |
-| [Infura][service]                 | it provides the tools and infrastructure that allow developers to easily take their blockchain application                          |
-| [nft.storage][service]                 | it provides decentralized storage on IPFS and Filecoin                         |
+| [https://infura.io/][service]                 | it provides the tools and infrastructure that allow developers to easily take their blockchain application                          |
+| [https://nft.storage/][service]                 | it provides decentralized storage on IPFS and Filecoin                         |
+| [Ganache]                 | Is a tool for creating a local blockchain for fast Ethereum development.                         |
+| [Socket.io,...]                 | Others lib                        |
 
 ```
 - OpenZeppelin Contract v4
